@@ -52,8 +52,22 @@
     },
     {
       "@type": "Offer",
+      "name": "Starter",
+      "price": "19",
+      "priceCurrency": "GBP",
+      "billingIncrement": "P1M"
+    },
+    {
+      "@type": "Offer",
       "name": "Pro",
-      "price": "50",
+      "price": "39",
+      "priceCurrency": "GBP",
+      "billingIncrement": "P1M"
+    },
+    {
+      "@type": "Offer",
+      "name": "Agency",
+      "price": "79",
       "priceCurrency": "GBP",
       "billingIncrement": "P1M"
     }
@@ -394,6 +408,9 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);display:flex;align
 .reveal.visible{opacity:1;transform:none;}
 
 /* ── Responsive ── */
+@media(max-width:1024px){
+  .pricing-grid{grid-template-columns:repeat(2,1fr)!important;}
+}
 @media(max-width:768px){
   html,body{overflow-x:hidden;}
   .problem-grid{grid-template-columns:1fr;}
@@ -848,6 +865,16 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);display:flex;align
       <p>Not all fixes are equal. Every action is ranked by potential impact — high, medium and quick win — so you always tackle what matters most first.</p>
     </div>
     <div class="feature-card reveal">
+      <div class="feature-icon g">📈</div>
+      <h3>Rank Tracker</h3>
+      <p>Track your keyword positions week by week with automatic snapshots. See which keywords are climbing, which are dropping, and measure the impact of your changes over time.</p>
+    </div>
+    <div class="feature-card reveal">
+      <div class="feature-icon g">🔍</div>
+      <h3>Page SEO Audit</h3>
+      <p>Enter any URL and get an instant SEO health score. Checks title tags, meta descriptions, headings, images, schema, internal links, page speed — with specific fixes for every issue found.</p>
+    </div>
+    <div class="feature-card reveal">
       <div class="feature-icon n">🌐</div>
       <h3>Multi-site dashboard</h3>
       <p>Manage multiple websites from one login. Each site gets its own action list, keyword data, content strategy and link building pipeline. Perfect for agencies.</p>
@@ -878,51 +905,65 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);display:flex;align
     </div>
   </div>
 
-  <div class="pricing-grid reveal" style="grid-template-columns:repeat(3,1fr);">
+  <div class="pricing-grid reveal" style="grid-template-columns:repeat(4,1fr);">
     <div class="price-card">
       <div class="price-name">Free</div>
       <div class="price-amount">£0</div>
       <div class="price-period">forever</div>
       <ul class="price-features">
         <li>1 website</li>
-        <li>Weekly action list — top 3 fixes</li>
-        <li>5 AI fix suggestions per month</li>
-        <li>Search Console integration</li>
-        <li>Basic SEO opportunities</li>
+        <li>Top 3 weekly actions</li>
+        <li>5 AI fixes per month</li>
+        <li>Search Console data</li>
+        <li>3 page audits/month</li>
       </ul>
       <a href="https://app.rankactions.com" class="price-btn outline">Get started free</a>
+    </div>
+    <div class="price-card">
+      <div class="price-name">Starter</div>
+      <div class="price-amount" id="starter-price">£19</div>
+      <div class="price-period" id="starter-period">per month · cancel any time</div>
+      <div id="starter-annual-saving" style="display:none;font-size:.8rem;color:var(--green);font-weight:600;margin-bottom:.5rem;">Save £38 vs monthly billing</div>
+      <ul class="price-features">
+        <li>3 websites</li>
+        <li>Full action list</li>
+        <li>20 AI fixes per month</li>
+        <li>Rank Tracker</li>
+        <li>Unlimited page audits</li>
+        <li>Weekly email digest</li>
+      </ul>
+      <a href="https://app.rankactions.com" class="price-btn outline" id="starter-cta">Get started</a>
     </div>
     <div class="price-card featured">
       <div class="price-badge">Most popular</div>
       <div class="price-name">Pro</div>
-      <div class="price-amount" id="pro-price">£50</div>
+      <div class="price-amount" id="pro-price">£39</div>
       <div class="price-period" id="pro-period">per month · cancel any time</div>
-      <div id="pro-annual-saving" style="display:none;font-size:.8rem;color:var(--green);font-weight:600;margin-bottom:.5rem;">Save £100 vs monthly billing</div>
+      <div id="pro-annual-saving" style="display:none;font-size:.8rem;color:var(--green);font-weight:600;margin-bottom:.5rem;">Save £78 vs monthly billing</div>
       <ul class="price-features">
         <li>Unlimited websites</li>
-        <li>Full weekly action list</li>
-        <li>Unlimited AI fix generator</li>
-        <li>AI content strategy planner</li>
-        <li>AI blog post generator</li>
-        <li>Link building tools + outreach emails</li>
-        <li>Conversion tracking</li>
+        <li>Unlimited AI fixes</li>
+        <li>AI Content Generator</li>
+        <li>Strategy Planner</li>
+        <li>Link Building tools</li>
+        <li>Rank Tracker</li>
+        <li>Page Audit</li>
         <li>Weekly email digest</li>
-        <li>Email support</li>
       </ul>
       <a href="https://app.rankactions.com" class="price-btn solid" id="pro-cta">Start free trial</a>
     </div>
     <div class="price-card">
       <div class="price-name">Agency</div>
-      <div class="price-amount" id="agency-price">£90</div>
+      <div class="price-amount" id="agency-price">£79</div>
       <div class="price-period" id="agency-period">per month · cancel any time</div>
-      <div id="agency-annual-saving" style="display:none;font-size:.8rem;color:var(--green);font-weight:600;margin-bottom:.5rem;">Save £180 vs monthly billing</div>
+      <div id="agency-annual-saving" style="display:none;font-size:.8rem;color:var(--green);font-weight:600;margin-bottom:.5rem;">Save £158 vs monthly billing</div>
       <ul class="price-features">
         <li>Everything in Pro</li>
         <li>Unlimited client sites</li>
-        <li>DataForSEO keyword data <span style="font-size:.7rem;color:var(--ink3);">(coming soon)</span></li>
+        <li>DataForSEO data <span style="font-size:.7rem;color:var(--ink3);">(coming soon)</span></li>
         <li>Competitor tracking <span style="font-size:.7rem;color:var(--ink3);">(coming soon)</span></li>
         <li>White-label reports <span style="font-size:.7rem;color:var(--ink3);">(coming soon)</span></li>
-        <li>Dedicated account support</li>
+        <li>Priority support</li>
       </ul>
       <a href="https://app.rankactions.com" class="price-btn outline" id="agency-cta">Get started</a>
     </div>
@@ -945,22 +986,32 @@ function setBilling(mode) {
   btnA.style.background = isAnnual ? 'var(--ink)'   : 'none';
   btnA.style.color      = isAnnual ? 'white'        : 'var(--ink3)';
 
+  // Starter card
+  document.getElementById('starter-price').innerHTML = isAnnual
+    ? '<span style="font-size:1.1rem;color:var(--ink3);text-decoration:line-through;margin-right:.25rem;">£228</span>£190'
+    : '£19';
+  document.getElementById('starter-period').innerHTML = isAnnual
+    ? 'per year &mdash; just <strong>£15.83/mo</strong>'
+    : 'per month &middot; cancel any time';
+  document.getElementById('starter-annual-saving').style.display = isAnnual ? 'block' : 'none';
+  document.getElementById('starter-cta').textContent = isAnnual ? 'Get started — best value' : 'Get started';
+
   // Pro card
   document.getElementById('pro-price').innerHTML = isAnnual
-    ? '<span style="font-size:1.1rem;color:var(--ink3);text-decoration:line-through;margin-right:.25rem;">£600</span>£500'
-    : '£50';
+    ? '<span style="font-size:1.1rem;color:var(--ink3);text-decoration:line-through;margin-right:.25rem;">£468</span>£390'
+    : '£39';
   document.getElementById('pro-period').innerHTML = isAnnual
-    ? 'per year &mdash; just <strong>£41.67/mo</strong>'
+    ? 'per year &mdash; just <strong>£32.50/mo</strong>'
     : 'per month &middot; cancel any time';
   document.getElementById('pro-annual-saving').style.display = isAnnual ? 'block' : 'none';
   document.getElementById('pro-cta').textContent = isAnnual ? 'Get started — best value' : 'Start free trial';
 
   // Agency card
   document.getElementById('agency-price').innerHTML = isAnnual
-    ? '<span style="font-size:1.1rem;color:var(--ink3);text-decoration:line-through;margin-right:.25rem;">£1,080</span>£900'
-    : '£90';
+    ? '<span style="font-size:1.1rem;color:var(--ink3);text-decoration:line-through;margin-right:.25rem;">£948</span>£790'
+    : '£79';
   document.getElementById('agency-period').innerHTML = isAnnual
-    ? 'per year &mdash; just <strong>£75/mo</strong>'
+    ? 'per year &mdash; just <strong>£65.83/mo</strong>'
     : 'per month &middot; cancel any time';
   document.getElementById('agency-annual-saving').style.display = isAnnual ? 'block' : 'none';
   document.getElementById('agency-cta').textContent = isAnnual ? 'Get started — best value' : 'Get started';
