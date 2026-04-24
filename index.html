@@ -837,22 +837,30 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);display:flex;align
       <!-- Mock audit result -->
       <div style="background:#0c0e1a;border-radius:16px;border:1px solid var(--border);padding:1.5rem;position:relative;overflow:hidden;">
         <!-- Dual score gauges -->
-        <div style="display:flex;justify-content:center;gap:1.5rem;margin-bottom:1rem;">
+        <div style="display:flex;justify-content:center;gap:1rem;margin-bottom:1rem;">
           <div style="text-align:center;">
-            <svg width="100" height="58" viewBox="0 0 100 58">
+            <svg width="85" height="50" viewBox="0 0 100 58">
               <path d="M 10 53 A 40 40 0 0 1 90 53" fill="none" stroke="#1e2440" stroke-width="8" stroke-linecap="round"/>
               <path d="M 10 53 A 40 40 0 0 1 82 25" fill="none" stroke="#0fdb8a" stroke-width="8" stroke-linecap="round"/>
             </svg>
-            <div style="font-size:1.4rem;font-weight:800;font-family:monospace;color:#0fdb8a;margin-top:-.35rem;">89</div>
-            <div style="font-size:.6rem;color:#8590b8;">SEO · Grade B</div>
+            <div style="font-size:1.2rem;font-weight:800;font-family:monospace;color:#0fdb8a;margin-top:-.3rem;">89</div>
+            <div style="font-size:.5rem;color:#8590b8;">SEO</div>
           </div>
           <div style="text-align:center;">
-            <svg width="100" height="58" viewBox="0 0 100 58">
+            <svg width="85" height="50" viewBox="0 0 100 58">
               <path d="M 10 53 A 40 40 0 0 1 90 53" fill="none" stroke="#1e2440" stroke-width="8" stroke-linecap="round"/>
               <path d="M 10 53 A 40 40 0 0 1 42 16" fill="none" stroke="#f5a623" stroke-width="8" stroke-linecap="round"/>
             </svg>
-            <div style="font-size:1.4rem;font-weight:800;font-family:monospace;color:#f5a623;margin-top:-.35rem;">40</div>
-            <div style="font-size:.6rem;color:#8590b8;">Performance</div>
+            <div style="font-size:1.2rem;font-weight:800;font-family:monospace;color:#f5a623;margin-top:-.3rem;">40</div>
+            <div style="font-size:.5rem;color:#8590b8;">Speed</div>
+          </div>
+          <div style="text-align:center;">
+            <svg width="85" height="50" viewBox="0 0 100 58">
+              <path d="M 10 53 A 40 40 0 0 1 90 53" fill="none" stroke="#1e2440" stroke-width="8" stroke-linecap="round"/>
+              <path d="M 10 53 A 40 40 0 0 1 55 14" fill="none" stroke="#a855f7" stroke-width="8" stroke-linecap="round"/>
+            </svg>
+            <div style="font-size:1.2rem;font-weight:800;font-family:monospace;color:#a855f7;margin-top:-.3rem;">55</div>
+            <div style="font-size:.5rem;color:#8590b8;">AI Ready</div>
           </div>
         </div>
         <!-- CWV metrics -->
@@ -897,11 +905,12 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);display:flex;align
       </div>
       <div>
         <div class="section-label" style="display:inline-block;margin-bottom:.75rem">Page Audit</div>
-        <h2 style="font-family:var(--display);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;letter-spacing:-.03em;margin-bottom:1rem;line-height:1.2;">SEO + Performance<br/>health check in one scan</h2>
-        <p style="color:var(--ink2);line-height:1.75;margin-bottom:1.5rem;">Enter any URL and get two scores — an SEO health check (12 on-page checks) and a Google PageSpeed performance score with Core Web Vitals. Every issue includes a plain English explanation and exactly how to fix it.</p>
+        <h2 style="font-family:var(--display);font-size:clamp(1.6rem,3vw,2.2rem);font-weight:800;letter-spacing:-.03em;margin-bottom:1rem;line-height:1.2;">SEO + Performance +<br/>AI Search Readiness</h2>
+        <p style="color:var(--ink2);line-height:1.75;margin-bottom:1.5rem;">Enter any URL and get three scores — SEO health, Google PageSpeed performance, and AI Search Readiness. See how likely AI engines like Google AI Overviews and ChatGPT are to cite your content.</p>
         <div style="display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.5rem;">
           <div style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;color:var(--ink2);">🔍 <strong style="color:var(--ink);">SEO checks:</strong> Title, meta, headings, images, schema, links</div>
           <div style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;color:var(--ink2);">⚡ <strong style="color:var(--ink);">Core Web Vitals:</strong> LCP, CLS, FCP from Google PageSpeed</div>
+          <div style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;color:var(--ink2);">🤖 <strong style="color:var(--ink);">AI Readiness:</strong> FAQ schema, question headings, direct answers, freshness</div>
           <div style="display:flex;align-items:center;gap:.5rem;font-size:.85rem;color:var(--ink2);">🎯 <strong style="color:var(--ink);">Opportunities:</strong> Specific fixes with estimated time savings</div>
         </div>
         <a href="https://app.rankactions.com" class="btn-primary" style="display:inline-block;text-decoration:none;">Try a free audit →</a>
@@ -1029,8 +1038,8 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);display:flex;align
     </div>
     <div class="feature-card reveal">
       <div class="feature-icon g">🔍</div>
-      <h3>Page SEO + Performance Audit</h3>
-      <p>Enter any URL and get dual scores — SEO health (12 on-page checks) and Google PageSpeed performance with Core Web Vitals (LCP, CLS, FCP). Includes specific fixes with estimated time savings.</p>
+      <h3>Page Audit + AI Readiness</h3>
+      <p>Enter any URL and get three scores — SEO health, Google PageSpeed performance, and AI Search Readiness. See how well your content is structured for Google AI Overviews, ChatGPT, and Perplexity.</p>
     </div>
     <div class="feature-card reveal">
       <div class="feature-icon n">🌐</div>
@@ -1064,6 +1073,7 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);display:flex;align
           <tr><td style="text-align:left;padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--ink2);font-weight:600;">Generates blog posts</td><td style="padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--green);font-weight:700;">✓ SEO-optimised</td><td style="padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--ink3);">Add-on</td><td style="padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--ink3);">✗</td><td style="padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--ink3);">✗</td></tr>
           <tr><td style="text-align:left;padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--ink2);font-weight:600;">SEO knowledge needed</td><td style="padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--green);font-weight:700;">None</td><td style="padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--ink3);">Expert</td><td style="padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--ink3);">Expert</td><td style="padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--ink3);">Moderate</td></tr>
           <tr><td style="text-align:left;padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--ink2);font-weight:600;">Core Web Vitals audit</td><td style="padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--green);font-weight:700;">✓ Built in</td><td style="padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--ink3);">Add-on</td><td style="padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--ink3);">✗</td><td style="padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--ink3);">✗</td></tr>
+          <tr><td style="text-align:left;padding:.65rem .5rem;color:var(--ink2);font-weight:600;">AI Search Readiness</td><td style="padding:.65rem .5rem;color:var(--green);font-weight:700;">✓ Built in</td><td style="padding:.65rem .5rem;color:var(--ink3);">✗</td><td style="padding:.65rem .5rem;color:var(--ink3);">✗</td><td style="padding:.65rem .5rem;color:var(--ink3);">✗</td></tr>
           <tr><td style="text-align:left;padding:.65rem .5rem;color:var(--ink2);font-weight:600;">Time to first result</td><td style="padding:.65rem .5rem;color:var(--green);font-weight:700;">5 minutes</td><td style="padding:.65rem .5rem;color:var(--ink3);">Days-weeks</td><td style="padding:.65rem .5rem;color:var(--ink3);">Days-weeks</td><td style="padding:.65rem .5rem;color:var(--ink3);">Days</td></tr>
         </tbody>
       </table>
@@ -1120,7 +1130,7 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);display:flex;align
         <li>Full action list</li>
         <li>20 AI fixes per month</li>
         <li>Rank Tracker</li>
-        <li>Unlimited page audits + Core Web Vitals</li>
+        <li>Unlimited page audits + AI Readiness</li>
         <li>Weekly email digest</li>
       </ul>
       <a href="https://app.rankactions.com" class="price-btn outline" id="starter-cta">Get started</a>
@@ -1138,7 +1148,7 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);display:flex;align
         <li>Strategy Planner</li>
         <li>Link Building tools</li>
         <li>Rank Tracker</li>
-        <li>Page Audit + Core Web Vitals</li>
+        <li>Page Audit + AI Readiness</li>
         <li>Weekly email digest</li>
       </ul>
       <a href="https://app.rankactions.com" class="price-btn solid" id="pro-cta">Start free trial</a>
