@@ -343,6 +343,14 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2rem;display:fl
 .price-btn{display:block;text-align:center;padding:.85rem;border-radius:10px;font-family:var(--body);font-size:.95rem;font-weight:600;text-decoration:none;cursor:pointer;border:none;width:100%;transition:opacity .15s;}
 .price-btn.outline{background:transparent;border:1.5px solid var(--border);color:var(--ink);}
 .price-btn.outline:hover{border-color:var(--ink);background:var(--bg2);}
+.price-more{cursor:pointer;margin:0 0 .75rem;user-select:none;}
+.price-more-label{display:block;font-size:.78rem;font-weight:600;color:var(--green);text-align:center;padding:.4rem 0;}
+.price-more-label::after{content:' ▾';font-size:.7rem;}
+.price-more.open .price-more-label::after{content:' ▴';}
+.price-features-extra{max-height:0;overflow:hidden;transition:max-height .3s ease;list-style:none;padding:0;margin:0;}
+.price-features-extra li{padding:.3rem 0;font-size:.875rem;color:var(--ink2);}
+.price-features-extra li::before{content:'✓ ';color:var(--green);font-weight:700;}
+.price-more.open .price-features-extra{max-height:300px;}
 .price-btn.solid{background:var(--green);color:white;}
 .price-btn.solid:hover{opacity:.9;}
 
@@ -1105,7 +1113,7 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);display:flex;align
     </div>
   </div>
 
-  <div class="pricing-grid reveal" style="grid-template-columns:repeat(4,1fr);">
+  <div class="pricing-grid reveal" style="grid-template-columns:repeat(4,1fr);align-items:start;">
     <div class="price-card">
       <div class="price-name">Free</div>
       <div class="price-amount">£0</div>
@@ -1114,10 +1122,15 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);display:flex;align
         <li>1 website</li>
         <li>Top 3 weekly actions</li>
         <li>5 AI fixes per month</li>
-        <li>Search Console data</li>
-        <li>3 page audits/month</li>
-        <li>Weekly email digest</li>
       </ul>
+      <div class="price-more" onclick="this.classList.toggle('open')">
+        <span class="price-more-label">See all features</span>
+        <ul class="price-features-extra">
+          <li>Search Console data</li>
+          <li>3 page audits/month</li>
+          <li>Weekly email digest</li>
+        </ul>
+      </div>
       <a href="https://app.rankactions.com" class="price-btn outline">Get started free</a>
     </div>
     <div class="price-card">
@@ -1127,12 +1140,17 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);display:flex;align
       <div id="starter-annual-saving" style="display:none;font-size:.8rem;color:var(--green);font-weight:600;margin-bottom:.5rem;">Save £38 vs monthly billing</div>
       <ul class="price-features">
         <li>3 websites</li>
-        <li>Full action list</li>
         <li>20 AI fixes per month</li>
         <li>Rank Tracker</li>
-        <li>Unlimited page audits + AI Readiness</li>
-        <li>Weekly email digest</li>
       </ul>
+      <div class="price-more" onclick="this.classList.toggle('open')">
+        <span class="price-more-label">See all features</span>
+        <ul class="price-features-extra">
+          <li>Full action list</li>
+          <li>Unlimited page audits + AI Readiness</li>
+          <li>Weekly email digest</li>
+        </ul>
+      </div>
       <a href="https://app.rankactions.com" class="price-btn outline" id="starter-cta">Get started</a>
     </div>
     <div class="price-card featured">
@@ -1145,12 +1163,17 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);display:flex;align
         <li>5 websites (+£5/site extra)</li>
         <li>Unlimited AI fixes</li>
         <li>AI Content Generator</li>
-        <li>Strategy Planner</li>
-        <li>Link Building tools</li>
-        <li>Rank Tracker</li>
-        <li>Page Audit + AI Readiness</li>
-        <li>Weekly email digest</li>
       </ul>
+      <div class="price-more" onclick="this.classList.toggle('open')">
+        <span class="price-more-label">See all features</span>
+        <ul class="price-features-extra">
+          <li>Strategy Planner</li>
+          <li>Link Building tools</li>
+          <li>Rank Tracker</li>
+          <li>Page Audit + AI Readiness</li>
+          <li>Weekly email digest</li>
+        </ul>
+      </div>
       <a href="https://app.rankactions.com" class="price-btn solid" id="pro-cta">Start free trial</a>
     </div>
     <div class="price-card">
@@ -1161,11 +1184,16 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);display:flex;align
       <ul class="price-features">
         <li>Everything in Pro</li>
         <li>10 websites (+£5/site extra)</li>
-        <li>DataForSEO data <span style="font-size:.7rem;color:var(--ink3);">(coming soon)</span></li>
-        <li>Competitor tracking <span style="font-size:.7rem;color:var(--ink3);">(coming soon)</span></li>
-        <li>White-label reports <span style="font-size:.7rem;color:var(--ink3);">(coming soon)</span></li>
         <li>Priority support</li>
       </ul>
+      <div class="price-more" onclick="this.classList.toggle('open')">
+        <span class="price-more-label">See all features</span>
+        <ul class="price-features-extra">
+          <li>DataForSEO data <span style="font-size:.7rem;color:var(--ink3);">(coming soon)</span></li>
+          <li>Competitor tracking <span style="font-size:.7rem;color:var(--ink3);">(coming soon)</span></li>
+          <li>White-label reports <span style="font-size:.7rem;color:var(--ink3);">(coming soon)</span></li>
+        </ul>
+      </div>
       <a href="https://app.rankactions.com" class="price-btn outline" id="agency-cta">Get started</a>
     </div>
   </div>
