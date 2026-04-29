@@ -181,7 +181,7 @@
 <script>
   (function() {
     var consent = localStorage.getItem('ra_cookies_accepted');
-    if (consent === 'essential') return; // user opted out of analytics
+    if (consent !== 'all') return; // only load GA after explicit consent
     var s = document.createElement('script');
     s.async = true;
     s.src = 'https://www.googletagmanager.com/gtag/js?id=G-HTQTTGR9TV';
@@ -1318,7 +1318,7 @@ function setBilling(mode) {
       <input type="email" class="capture-input" placeholder="your@email.com" id="emailInput"/>
       <button class="capture-btn" onclick="handleSignup()">Get started free</button>
     </div>
-    <div class="cf-turnstile" data-sitekey="0x4AAAAAAC9fyBJXL9-Cz9k3" data-theme="dark" style="margin:1rem auto;display:flex;justify-content:center;"></div>
+    <div class="cf-turnstile" data-sitekey="0x4AAAAAADFCLLu1mA6g_BoO" data-theme="dark" style="margin:1rem auto;display:flex;justify-content:center;"></div>
     <div class="capture-success" id="successMsg">✓ You're on the list — check your inbox shortly.</div>
     <p class="capture-note">By signing up you agree to our <a href="/privacy.html" style="color:rgba(255,255,255,.5);text-decoration:underline;">Privacy Policy</a> and to receive weekly emails from RankActions. Unsubscribe any time. Free forever. No credit card.</p>
   </div>
@@ -1382,7 +1382,7 @@ async function handleSignup() {
     const res = await fetch('https://api.rankactions.com/api/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, source: 'landing_page' }),
+      body: JSON.stringify({ email, source: 'landing_page', turnstileToken }),
     });
     if (!res.ok) throw new Error('Signup failed');
   } catch (err) {
