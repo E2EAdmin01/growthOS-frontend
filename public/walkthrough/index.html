@@ -1,0 +1,2365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- Tell every well-behaved crawler to ignore this page completely.
+     Combined with robots.txt disallow + an unguessable URL, this keeps the
+     walkthrough out of search results and link-graph discovery. -->
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<meta name="bingbot" content="noindex, nofollow, noarchive, nosnippet">
+
+<!-- Suppress social-platform link previews so the URL doesn't leak via Slack,
+     LinkedIn, etc when recipients paste it. -->
+<meta property="og:title" content="">
+<meta property="og:description" content="">
+<meta name="twitter:card" content="">
+<meta name="referrer" content="no-referrer">
+
+<title>RankActions — Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ===== TOKENS ===== */
+  :root {
+    --dark: #0d0d0d;
+    --dark-2: #181818;
+    --dark-3: #242424;
+    --cream: #f5f1e8;
+    --cream-soft: #ebe6d8;
+    --green: #0e7a3c;
+    --green-lt: #1ea863;
+    --green-glow: rgba(30, 168, 99, 0.15);
+    --white: #ffffff;
+    --text: #0d0d0d;
+    --text-2: #525252;
+    --text-3: #888888;
+    --text-on-dark: #f5f1e8;
+    --text-on-dark-mute: #b8b3a4;
+    --text-on-dark-soft: #7a766a;
+    --border-dark: #2a2a2a;
+    --border-soft: #ebe6d8;
+    --red: #dc2626;
+    --amber: #d97706;
+    --blue: #2563eb;
+    --purple: #a855f7;
+    --display: 'Barlow Condensed', sans-serif;
+    --body: 'DM Sans', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: var(--body);
+    background: var(--dark);
+    color: var(--text-on-dark);
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ===== LAYOUT ===== */
+  .app {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    height: 100vh;
+  }
+
+  /* ===== SIDEBAR ===== */
+  .sidebar {
+    background: #050505;
+    border-right: 1px solid var(--border-dark);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .sidebar-head {
+    padding: 1.75rem 1.5rem 1.5rem;
+    border-bottom: 1px solid var(--border-dark);
+  }
+  .wordmark {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.75rem;
+    letter-spacing: -0.01em;
+    line-height: 1;
+  }
+  .wordmark .rank { color: var(--text-on-dark); }
+  .wordmark .actions { color: var(--green-lt); }
+  .pill {
+    display: inline-block;
+    margin-top: 0.5rem;
+    padding: 0.2rem 0.55rem;
+    background: var(--green-glow);
+    color: var(--green-lt);
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border-radius: 4px;
+    border: 1px solid rgba(30, 168, 99, 0.25);
+  }
+  .sidebar-meta {
+    margin-top: 0.9rem;
+    color: var(--text-on-dark-mute);
+    font-size: 0.78rem;
+    line-height: 1.5;
+  }
+
+  .nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem 0.75rem;
+  }
+  .nav::-webkit-scrollbar { width: 6px; }
+  .nav::-webkit-scrollbar-thumb { background: #1a1a1a; border-radius: 3px; }
+
+  .nav-section {
+    padding: 0.75rem 0.75rem 0.35rem;
+    font-size: 0.65rem;
+    color: var(--text-on-dark-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-weight: 600;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.6rem 0.75rem;
+    margin: 0.1rem 0;
+    border-radius: 6px;
+    cursor: pointer;
+    color: var(--text-on-dark-mute);
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .nav-item:hover { background: rgba(255,255,255,0.03); color: var(--text-on-dark); }
+  .nav-item.active {
+    background: rgba(30, 168, 99, 0.1);
+    color: var(--text-on-dark);
+  }
+  .nav-item.active .nav-num { color: var(--green-lt); }
+  .nav-item.done .nav-num::before { content: '✓'; color: var(--green-lt); }
+  .nav-item.done .nav-num span { display: none; }
+  .nav-num {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    width: 1.5rem;
+    text-align: center;
+    color: var(--text-on-dark-soft);
+    font-weight: 500;
+  }
+  .nav-num::before { display: none; }
+  .nav-label {
+    font-size: 0.88rem;
+    font-weight: 500;
+    flex: 1;
+  }
+  .nav-tier {
+    font-size: 0.6rem;
+    color: var(--text-on-dark-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+  }
+
+  .sidebar-foot {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-dark);
+    font-size: 0.72rem;
+    color: var(--text-on-dark-soft);
+  }
+  .progress-bar {
+    height: 2px;
+    background: var(--border-dark);
+    border-radius: 1px;
+    overflow: hidden;
+    margin-top: 0.5rem;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--green-lt);
+    transition: width 0.3s;
+  }
+
+  /* ===== MAIN ===== */
+  .main {
+    background: var(--dark);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 2rem;
+    border-bottom: 1px solid var(--border-dark);
+    background: var(--dark);
+  }
+  .topbar-title {
+    font-family: var(--display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1;
+  }
+  .topbar-sub {
+    color: var(--text-on-dark-mute);
+    font-size: 0.82rem;
+    margin-top: 0.3rem;
+  }
+  .topbar-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .ctrl {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border-dark);
+    color: var(--text-on-dark);
+    padding: 0.5rem 0.85rem;
+    border-radius: 6px;
+    font-family: var(--body);
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .ctrl:hover:not(:disabled) {
+    background: rgba(255,255,255,0.08);
+    border-color: #404040;
+  }
+  .ctrl.primary {
+    background: var(--green);
+    border-color: var(--green);
+    color: white;
+  }
+  .ctrl.primary:hover:not(:disabled) {
+    background: var(--green-lt);
+    border-color: var(--green-lt);
+  }
+  .ctrl:disabled { opacity: 0.4; cursor: not-allowed; }
+  .ctrl-kbd {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    background: rgba(255,255,255,0.07);
+    padding: 0.1rem 0.35rem;
+    border-radius: 3px;
+    color: var(--text-on-dark-mute);
+  }
+
+  /* ===== STAGE ===== */
+  .stage {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+    background: linear-gradient(180deg, var(--dark) 0%, #0a0a0a 100%);
+  }
+  .stage-inner {
+    position: absolute;
+    inset: 2rem;
+    border-radius: 12px;
+    background: var(--cream);
+    color: var(--text);
+    overflow: hidden;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.4), 0 0 0 1px var(--border-dark);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* App chrome (mock browser frame inside the stage) */
+  .app-chrome {
+    background: var(--dark);
+    color: var(--text-on-dark);
+    padding: 0.75rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+  }
+  .app-chrome-wordmark {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 1.1rem;
+    line-height: 1;
+  }
+  .app-chrome-tabs {
+    display: flex;
+    gap: 0.25rem;
+    flex: 1;
+    margin-left: 1.5rem;
+  }
+  .app-tab {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.78rem;
+    color: var(--text-on-dark-mute);
+    border-radius: 4px;
+    cursor: default;
+  }
+  .app-tab.active {
+    background: rgba(30, 168, 99, 0.15);
+    color: var(--green-lt);
+    font-weight: 600;
+  }
+  .app-chrome-user {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.78rem;
+  }
+  .avatar {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--green-lt);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+
+  .app-body {
+    flex: 1;
+    overflow-y: auto;
+    background: var(--cream);
+    padding: 2rem;
+    position: relative;
+  }
+  .app-body::-webkit-scrollbar { width: 8px; }
+  .app-body::-webkit-scrollbar-thumb { background: var(--cream-soft); border-radius: 4px; }
+
+  /* ===== CALLOUTS ===== */
+  /* ===== PINS (discreet numbered markers) ===== */
+  .pin {
+    position: absolute;
+    z-index: 10;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--green-lt);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(30,168,99,0.4), 0 0 0 4px rgba(30,168,99,0.15);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    opacity: 0;
+    animation: pinIn 0.35s ease forwards;
+    user-select: none;
+    transform: translate(-50%, -50%);
+  }
+  .pin::before {
+    /* gentle outer pulse so the pins read as "interactive" not just decorative */
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid var(--green-lt);
+    opacity: 0.35;
+    animation: pinPulse 2.4s ease-in-out infinite;
+  }
+  .pin:hover, .pin.active {
+    background: var(--green);
+    transform: translate(-50%, -50%) scale(1.15);
+    box-shadow: 0 6px 20px rgba(30,168,99,0.55), 0 0 0 6px rgba(30,168,99,0.2);
+    z-index: 20;
+  }
+  .pin.active::before { display: none; }
+  @keyframes pinIn {
+    from { opacity: 0; transform: translate(-50%, -50%) scale(0.4); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  }
+  @keyframes pinPulse {
+    0%, 100% { transform: scale(1); opacity: 0.4; }
+    50% { transform: scale(1.18); opacity: 0; }
+  }
+
+  /* Tooltip that pops out from a hovered/clicked pin */
+  .pin-tip {
+    position: absolute;
+    z-index: 30;
+    background: var(--dark);
+    color: var(--text-on-dark);
+    padding: 0.85rem 1rem;
+    border-radius: 8px;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(30,168,99,0.5);
+    max-width: 280px;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity 0.15s, transform 0.15s;
+  }
+  .pin-tip.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .pin-tip-title {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 0.92rem;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    color: var(--text-on-dark);
+    margin-bottom: 0.3rem;
+  }
+  .pin-tip-body {
+    color: var(--text-on-dark-mute);
+    font-size: 0.8rem;
+  }
+  .pin-tip::after {
+    /* arrow pointing back to the pin */
+    content: '';
+    position: absolute;
+    width: 0; height: 0;
+  }
+  .pin-tip.arrow-up::after {
+    top: -7px;
+    left: var(--arrow-x, 18px);
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 7px solid var(--dark);
+  }
+  .pin-tip.arrow-down::after {
+    bottom: -7px;
+    left: var(--arrow-x, 18px);
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 7px solid var(--dark);
+  }
+  .pin-tip.arrow-left::after {
+    left: -7px;
+    top: var(--arrow-y, 14px);
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-right: 7px solid var(--dark);
+  }
+  .pin-tip.arrow-right::after {
+    right: -7px;
+    top: var(--arrow-y, 14px);
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+    border-left: 7px solid var(--dark);
+  }
+
+  /* ===== HIGHLIGHTS PANEL (below the stage) ===== */
+  .highlights {
+    flex-shrink: 0;
+    background: #0a0a0a;
+    border-top: 1px solid var(--border-dark);
+    padding: 1rem 2rem;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+  }
+  .highlights.has-content {
+    max-height: 200px;
+    padding: 1rem 2rem;
+  }
+  .highlights-head {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.75rem;
+  }
+  .highlights-head .label {
+    font-family: var(--display);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-on-dark-mute);
+  }
+  .highlights-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.6rem;
+  }
+  .highlight-chip {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    padding: 0.55rem 0.7rem;
+    background: rgba(255,255,255,0.025);
+    border: 1px solid var(--border-dark);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .highlight-chip:hover {
+    background: rgba(30, 168, 99, 0.07);
+    border-color: rgba(30, 168, 99, 0.4);
+  }
+  .highlight-chip.active {
+    background: rgba(30, 168, 99, 0.1);
+    border-color: var(--green-lt);
+  }
+  .highlight-chip-num {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--green-lt);
+    color: white;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .highlight-chip-text {
+    flex: 1;
+    min-width: 0;
+  }
+  .highlight-chip-title {
+    font-family: var(--display);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-on-dark);
+    line-height: 1.2;
+  }
+  .highlight-chip-body {
+    color: var(--text-on-dark-soft);
+    font-size: 0.75rem;
+    margin-top: 0.15rem;
+    line-height: 1.4;
+    /* truncate to 2 lines */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Highlight halo (drawn under callouts) */
+  .halo {
+    position: absolute;
+    border: 2px solid var(--green-lt);
+    border-radius: 8px;
+    box-shadow: 0 0 0 4px rgba(30,168,99,0.12), 0 0 24px rgba(30,168,99,0.3);
+    pointer-events: none;
+    animation: pulse 2s ease-in-out infinite;
+    z-index: 5;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 4px rgba(30,168,99,0.12), 0 0 24px rgba(30,168,99,0.3); }
+    50% { box-shadow: 0 0 0 6px rgba(30,168,99,0.2), 0 0 32px rgba(30,168,99,0.5); }
+  }
+
+  /* ===== APP MOCK COMPONENTS ===== */
+  .card {
+    background: white;
+    border: 1px solid var(--border-soft);
+    border-radius: 10px;
+    padding: 1.25rem;
+  }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+  .stack { display: flex; flex-direction: column; gap: 1rem; }
+  .row { display: flex; align-items: center; gap: 0.75rem; }
+  .between { justify-content: space-between; }
+
+  .h1 { font-family: var(--display); font-size: 2rem; font-weight: 700; line-height: 1.1; letter-spacing: -0.01em; }
+  .h2 { font-family: var(--display); font-size: 1.4rem; font-weight: 600; line-height: 1.15; }
+  .h3 { font-family: var(--display); font-size: 1.1rem; font-weight: 600; line-height: 1.2; }
+  .sub { color: var(--text-2); font-size: 0.9rem; }
+  .label-sm { font-size: 0.7rem; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+  .stat-num { font-family: var(--mono); font-size: 1.6rem; font-weight: 600; line-height: 1; }
+  .stat-num.green { color: var(--green); }
+  .stat-num.amber { color: var(--amber); }
+  .stat-num.red { color: var(--red); }
+  .delta { font-size: 0.78rem; font-weight: 600; }
+  .delta.up { color: var(--green); }
+  .delta.down { color: var(--red); }
+
+  .badge {
+    display: inline-block;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    padding: 0.18rem 0.5rem;
+    border-radius: 3px;
+  }
+  .badge.green { background: rgba(14,122,60,0.1); color: var(--green); }
+  .badge.amber { background: rgba(217,119,6,0.1); color: var(--amber); }
+  .badge.red { background: rgba(220,38,38,0.1); color: var(--red); }
+  .badge.blue { background: rgba(37,99,235,0.1); color: var(--blue); }
+  .badge.purple { background: rgba(168,85,247,0.12); color: var(--purple); }
+  .badge.gray { background: rgba(0,0,0,0.05); color: var(--text-2); }
+
+  .btn {
+    background: var(--green);
+    color: white;
+    padding: 0.5rem 0.9rem;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    border: none;
+    cursor: default;
+  }
+  .btn.ghost {
+    background: white;
+    color: var(--text);
+    border: 1px solid var(--border-soft);
+  }
+  .btn.dark {
+    background: var(--dark);
+    color: white;
+  }
+
+  /* Score gauge */
+  .gauge {
+    width: 100%; aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .gauge svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .gauge-num {
+    position: absolute;
+    text-align: center;
+    font-family: var(--mono);
+  }
+  .gauge-num .v {
+    font-size: 2.6rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .gauge-num .g {
+    font-size: 0.7rem;
+    color: var(--text-2);
+    margin-top: 0.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* Sparkline */
+  .spark { width: 100%; height: 32px; }
+
+  /* Auth screen */
+  .auth-bg {
+    background: var(--dark);
+    color: var(--text-on-dark);
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin: -2rem;
+  }
+  .auth-left {
+    padding: 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: radial-gradient(circle at 30% 30%, rgba(30,168,99,0.12), transparent 50%), var(--dark);
+  }
+  .auth-right {
+    padding: 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: #0a0a0a;
+  }
+
+  /* Strategy planner cluster items */
+  .cluster {
+    background: white;
+    border: 1px solid var(--border-soft);
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  /* Welcome screen */
+  .welcome {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+    padding: 4rem;
+  }
+
+  /* HTML preview iframe-like */
+  .preview-frame {
+    background: #ffffff;
+    border-radius: 6px;
+    padding: 1.25rem;
+    border: 1px solid var(--border-soft);
+    font-family: 'Georgia', serif;
+    color: #1a1a1a;
+    line-height: 1.7;
+  }
+  .preview-frame h1 {
+    font-family: var(--display);
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--dark);
+  }
+  .preview-frame h2 {
+    font-family: var(--display);
+    font-size: 1.15rem;
+    margin: 1rem 0 0.4rem;
+    color: var(--dark);
+  }
+  .anno {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.55rem;
+    background: var(--green-lt);
+    color: white;
+    padding: 0.08rem 0.3rem;
+    border-radius: 2px;
+    margin-right: 0.4rem;
+    vertical-align: middle;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .anno.h2 { background: var(--blue); }
+  .anno.h3 { background: var(--purple); }
+  .anno.link { background: var(--amber); }
+
+  /* Welcome overlay */
+  .welcome-screen {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--dark) 0%, #1a1a1a 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem;
+    z-index: 50;
+  }
+  .welcome-card {
+    max-width: 600px;
+    text-align: center;
+  }
+  .welcome-hero {
+    font-family: var(--display);
+    font-size: 4rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+  .welcome-hero .rank { color: var(--text-on-dark); }
+  .welcome-hero .actions { color: var(--green-lt); }
+  .welcome-tagline {
+    font-family: var(--display);
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: var(--text-on-dark);
+    margin-bottom: 0.75rem;
+  }
+  .welcome-sub {
+    color: var(--text-on-dark-mute);
+    font-size: 0.95rem;
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .welcome-meta {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    margin-bottom: 2.5rem;
+    font-size: 0.78rem;
+    color: var(--text-on-dark-soft);
+  }
+  .welcome-meta div { display: flex; align-items: center; gap: 0.4rem; }
+  .welcome-meta .dot { width: 5px; height: 5px; background: var(--green-lt); border-radius: 50%; }
+  .welcome-cta {
+    background: var(--green-lt);
+    color: white;
+    padding: 0.85rem 2rem;
+    border-radius: 8px;
+    font-family: var(--body);
+    font-size: 0.95rem;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .welcome-cta:hover {
+    background: var(--green);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 30px rgba(30,168,99,0.3);
+  }
+  .welcome-kbd {
+    color: var(--text-on-dark-soft);
+    font-size: 0.75rem;
+    margin-top: 1rem;
+    font-family: var(--mono);
+  }
+  .welcome-kbd span {
+    background: rgba(255,255,255,0.07);
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+    margin: 0 0.2rem;
+  }
+
+  /* ===== TIER BADGE ===== */
+  .tier-tag {
+    display: inline-block;
+    font-size: 0.62rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.15rem 0.45rem;
+    border-radius: 3px;
+    margin-left: 0.5rem;
+  }
+  .tier-tag.free { background: rgba(0,0,0,0.05); color: var(--text-2); }
+  .tier-tag.pro { background: rgba(14,122,60,0.12); color: var(--green); }
+  .tier-tag.agency { background: rgba(168,85,247,0.12); color: var(--purple); }
+  .tier-tag.starter { background: rgba(37,99,235,0.12); color: var(--blue); }
+
+  /* Site detail tab strip */
+  .tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border-soft);
+    margin-bottom: 1.5rem;
+  }
+  .tab {
+    padding: 0.6rem 1rem;
+    color: var(--text-2);
+    font-size: 0.88rem;
+    font-weight: 500;
+    border-bottom: 2px solid transparent;
+    cursor: default;
+  }
+  .tab.active {
+    color: var(--green);
+    border-bottom-color: var(--green);
+    font-weight: 600;
+  }
+
+  /* Rank tracker table */
+  table.kw {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+  table.kw th {
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.7rem;
+    color: var(--text-2);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  table.kw td {
+    padding: 0.65rem 0.75rem;
+    border-bottom: 1px solid var(--cream-soft);
+  }
+  table.kw tr:last-child td { border-bottom: none; }
+  .pos {
+    font-family: var(--mono);
+    font-weight: 600;
+  }
+
+  /* Wizard steps */
+  .step-circle {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: var(--cream-soft);
+    color: var(--text-2);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+  .step-circle.active { background: var(--green); color: white; }
+  .step-circle.done { background: var(--green-lt); color: white; }
+
+  /* Settings list */
+  .setting-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--cream-soft);
+  }
+  .setting-row:last-child { border-bottom: none; }
+  .setting-row .label { font-weight: 500; }
+  .setting-row .value { color: var(--text-2); font-size: 0.88rem; }
+
+  /* Audit issue cards */
+  .issue-row {
+    display: flex;
+    gap: 0.85rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--cream-soft);
+    align-items: start;
+  }
+  .issue-row:last-child { border-bottom: none; }
+  .issue-icon {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+    margin-top: 0.15rem;
+  }
+  .issue-icon.pass { background: var(--green); }
+  .issue-icon.warn { background: var(--amber); }
+  .issue-icon.fail { background: var(--red); }
+
+  /* Link building prospects */
+  .prospect-card {
+    background: white;
+    border: 1px solid var(--border-soft);
+    border-radius: 6px;
+    padding: 0.85rem;
+  }
+
+  /* ===== RESPONSIVE FALLBACK ===== */
+  @media (max-width: 900px) {
+    .app { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .stage-inner { inset: 1rem; }
+    .auth-bg { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- ===================================================================== -->
+  <!-- SIDEBAR                                                                -->
+  <!-- ===================================================================== -->
+  <aside class="sidebar">
+    <div class="sidebar-head">
+      <div class="wordmark"><span class="rank">Rank</span><span class="actions">Actions</span></div>
+      <span class="pill">Feature Walkthrough</span>
+      <div class="sidebar-meta">SEO that tells you what to do next.<br/>UK SMBs · marketing teams · agencies.</div>
+    </div>
+    <nav class="nav" id="nav">
+      <div class="nav-section">Getting Started</div>
+      <!-- nav items injected by JS -->
+    </nav>
+    <div class="sidebar-foot">
+      <div>Progress: <span id="progress-text">0/11</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    </div>
+  </aside>
+
+  <!-- ===================================================================== -->
+  <!-- MAIN                                                                   -->
+  <!-- ===================================================================== -->
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <div class="topbar-title" id="step-title">Welcome</div>
+        <div class="topbar-sub" id="step-sub">Interactive tour of RankActions</div>
+      </div>
+      <div class="topbar-controls">
+        <button class="ctrl" id="prev" disabled>← Prev <span class="ctrl-kbd">←</span></button>
+        <button class="ctrl primary" id="next">Next → <span class="ctrl-kbd">→</span></button>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="stage-inner" id="stage-inner">
+        <!-- screens injected here -->
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+/* ============================================================================
+   STEPS DATA
+   ============================================================================
+   Each step describes a screen + callouts. The screen is rendered once when
+   navigated to. Callouts are positioned absolutely over the rendered screen
+   and animate in with a slight stagger.
+============================================================================ */
+const steps = [
+  {
+    id: 'welcome',
+    title: 'Welcome',
+    subtitle: 'Take the 5-minute tour',
+    navLabel: '0. Welcome',
+    section: 'Getting Started',
+    welcome: true,
+  },
+  {
+    id: 'signin',
+    title: '1. Sign in',
+    subtitle: 'Email or Google OAuth via Clerk',
+    navLabel: '1. Sign in',
+    section: 'Getting Started',
+    screen: 'auth',
+    callouts: [
+      { num: '01', title: 'Clerk Authentication', body: 'RS256 JWTs verified against pinned issuer. MFA available. Email/password or Google one-click.', x: '52%', y: '32%', arrow: 'left' },
+      { num: '02', title: 'Privacy by design', body: 'No analytics consent banner needed on the auth screen — GDPR-compliant flow throughout.', x: '52%', y: '62%', arrow: 'left' },
+    ],
+  },
+  {
+    id: 'plans',
+    title: '2. Pick your plan',
+    subtitle: 'Four tiers, server-side enforced',
+    navLabel: '2. Plan selection',
+    section: 'Getting Started',
+    screen: 'plans',
+    callouts: [
+      { num: '01', title: 'Four tiers', body: 'Free · Starter · Pro · Agency. Plan enforced server-side on every API call — UI hiding is not the security boundary.', x: '4%', y: '78%', arrow: 'up' },
+      { num: '02', title: 'Agency white-label', body: 'Only Agency tier unlocks branded PDF reports. Gated inside the export function — branding overrides are silently discarded for lower tiers.', x: '60%', y: '14%', arrow: 'down' },
+    ],
+  },
+  {
+    id: 'dashboard',
+    title: '3. Dashboard',
+    subtitle: 'What happened, what matters, what to do next',
+    navLabel: '3. Dashboard',
+    section: 'Core',
+    screen: 'dashboard',
+    callouts: [
+      { num: '01', title: 'KPI strip', body: 'Live GSC data. Clicks, impressions, position, CTR — with 28-day deltas.', x: '24%', y: '24%', arrow: 'up' },
+      { num: '02', title: 'AI Summary', body: 'Claude reads your week\'s performance and writes 3 sentences of plain English insight.', x: '4%', y: '50%', arrow: 'up' },
+      { num: '03', title: 'Priority Actions', body: 'Prioritised by impact × effort. Each shows the exact fix — title text, meta description, copy-paste ready.', x: '4%', y: '74%', arrow: 'up' },
+      { num: '04', title: 'Completed Actions', body: 'Syncs across devices via Supabase. Track progress without losing it when you switch browsers.', x: '64%', y: '52%', arrow: 'left' },
+    ],
+  },
+  {
+    id: 'site',
+    title: '4. Site Detail',
+    subtitle: 'Drill into one site, five tabs',
+    navLabel: '4. Site Detail',
+    section: 'Core',
+    screen: 'site',
+    callouts: [
+      { num: '01', title: 'Five tabs', body: 'Overview · SEO Opportunities · Conversions · Issues · Striking Distance. Each tab is a focused workflow, not a dashboard pile.', x: '4%', y: '14%', arrow: 'down' },
+      { num: '02', title: 'Striking Distance', body: 'Keywords ranking 11-20 — close enough that a small push could move them onto page 1. Highest-leverage SEO work.', x: '20%', y: '46%', arrow: 'up' },
+      { num: '03', title: 'Routing', body: 'Each opportunity routes directly to the right tool — title fix → AI Fix modal; new content → Content Generator with keyword pre-filled.', x: '50%', y: '76%', arrow: 'up' },
+    ],
+  },
+  {
+    id: 'audit',
+    title: '5. Page SEO Audit',
+    subtitle: 'Three independent scores, any URL',
+    navLabel: '5. Page Audit',
+    section: 'Tools',
+    screen: 'audit',
+    callouts: [
+      { num: '01', title: 'Three scores', body: 'On-Page SEO (HTML analysis) · Page Speed (Google PSI) · AI Search Readiness (8 checks for citation signals).', x: '4%', y: '20%', arrow: 'down' },
+      { num: '02', title: 'AI Search Readiness', body: 'Most SEO tools haven\'t added this yet. Checks FAQ schema, question-based headings, concise direct answers — the signals AI engines look for when citing sources.', x: '64%', y: '24%', arrow: 'left' },
+      { num: '03', title: 'Verdict-first', body: 'Score-aware closing line. Top 3 priorities scored across all three dimensions — one of each kind for variety.', x: '4%', y: '74%', arrow: 'up' },
+      { num: '04', title: 'Branded PDF export', body: 'Agency tier exports a fully white-labelled sales PDF. Lower tiers export with RankActions branding.', x: '60%', y: '5%', arrow: 'down' },
+    ],
+  },
+  {
+    id: 'strategy-suggestions',
+    title: '6a. Strategy Planner — Suggestions',
+    subtitle: 'AI generates three viable strategic topics',
+    navLabel: '6. Strategy Planner',
+    section: 'Tools',
+    screen: 'strategy-suggestions',
+    tier: 'Pro',
+    callouts: [
+      { num: '01', title: 'Three topic options', body: 'Each suggestion scored by traffic potential and difficulty. AI considers your previous strategies (history-aware) to avoid duplication.', x: '6%', y: '38%', arrow: 'up' },
+      { num: '02', title: 'DataForSEO enrichment', body: 'Pro tier unlocks real Google Ads search volume, CPC and competition — keyword-scoped cache (30 days) keeps it affordable.', x: '64%', y: '16%', arrow: 'left' },
+    ],
+  },
+  {
+    id: 'strategy-planner',
+    title: '6b. Strategy Planner — Active',
+    subtitle: 'Pillar + clusters with status tracking',
+    navLabel: '   (Planner view)',
+    section: 'Tools',
+    screen: 'strategy-planner',
+    tier: 'Pro',
+    callouts: [
+      { num: '01', title: 'Pillar + clusters', body: 'One comprehensive pillar page plus 5-8 cluster pages. Internal link structure built for topical authority.', x: '4%', y: '22%', arrow: 'down' },
+      { num: '02', title: 'Status tracking', body: 'Not Started → Drafted → Published. Server-backed via Supabase — same status visible across all your devices.', x: '64%', y: '50%', arrow: 'left' },
+      { num: '03', title: 'Route to Content Generator', body: 'Each cluster page has a "Write" button that opens the Content Generator pre-filled with the keyword and pillar context.', x: '4%', y: '72%', arrow: 'up' },
+    ],
+  },
+  {
+    id: 'links',
+    title: '7. Link Building',
+    subtitle: 'Gemini-grounded outreach with status tracking',
+    navLabel: '7. Link Building',
+    section: 'Tools',
+    screen: 'links',
+    tier: 'Pro',
+    callouts: [
+      { num: '01', title: 'Gemini grounded', body: 'Live web search powers genuinely current outreach opportunities — not stale databases. Fallback chain Flash → Flash-Lite → Claude.', x: '4%', y: '18%', arrow: 'down' },
+      { num: '02', title: 'Prospect pipeline', body: 'Identified → Contacted → Replied → Won. Server-backed pipeline state syncs across devices.', x: '64%', y: '42%', arrow: 'left' },
+      { num: '03', title: 'AI outreach templates', body: 'Generate a tailored cold email per prospect. Edit, copy, send.', x: '4%', y: '78%', arrow: 'up' },
+    ],
+  },
+  {
+    id: 'content',
+    title: '8. Content Generator',
+    subtitle: 'Production-ready blog posts with annotated preview',
+    navLabel: '8. Content Generator',
+    section: 'Tools',
+    screen: 'content',
+    tier: 'Pro',
+    callouts: [
+      { num: '01', title: 'Annotated preview', body: 'Every H1/H2/H3 and internal link is colour-coded. See the SEO structure at a glance before publishing.', x: '40%', y: '22%', arrow: 'up' },
+      { num: '02', title: 'Internal link integrity', body: 'Generator constructs a link pool from your top 8 GSC pages + homepage fallback. Never invents URLs that don\'t exist on your site.', x: '4%', y: '78%', arrow: 'up' },
+      { num: '03', title: 'Sandboxed', body: 'Preview iframe uses sandbox="allow-same-origin" — no allow-scripts. AI-generated HTML can\'t execute.', x: '64%', y: '52%', arrow: 'left' },
+    ],
+  },
+  {
+    id: 'rank',
+    title: '9. Rank Tracker',
+    subtitle: 'Daily snapshots, position deltas, alerts',
+    navLabel: '9. Rank Tracker',
+    section: 'Tools',
+    screen: 'rank',
+    tier: 'Starter',
+    callouts: [
+      { num: '01', title: 'Daily snapshots', body: 'Every morning at 6am UK time. 90-day rolling history stored in Cloudflare KV.', x: '4%', y: '20%', arrow: 'down' },
+      { num: '02', title: 'Position deltas', body: 'Up arrows, down arrows, plain English. No need to interpret line charts.', x: '64%', y: '50%', arrow: 'left' },
+      { num: '03', title: 'Email alerts', body: 'Weekly digest summarises wins and losses. Optional push alerts on big moves.', x: '4%', y: '76%', arrow: 'up' },
+    ],
+  },
+  {
+    id: 'settings',
+    title: '10. Settings',
+    subtitle: 'Profile · plan · sites · GDPR self-serve',
+    navLabel: '10. Settings',
+    section: 'Account',
+    screen: 'settings',
+    callouts: [
+      { num: '01', title: 'GSC connection', body: 'Connect Google Search Console with read-only OAuth. Disconnect any time — your historical reports are preserved.', x: '4%', y: '28%', arrow: 'down' },
+      { num: '02', title: 'GDPR self-serve', body: 'Article 15 data export and Article 17 account deletion — both available from this page. No tickets needed.', x: '50%', y: '74%', arrow: 'up' },
+      { num: '03', title: 'Site management', body: 'Pro tier: up to 5 sites. Agency: up to 10. Add additional sites for £5/month each.', x: '60%', y: '14%', arrow: 'down' },
+    ],
+  },
+  {
+    id: 'wizard',
+    title: '11. Starting Out Wizard',
+    subtitle: 'Guided onboarding for sites with no GSC data',
+    navLabel: '11. Starting Out',
+    section: 'Account',
+    screen: 'wizard',
+    callouts: [
+      { num: '01', title: 'For new sites', body: 'Brand new website? No GSC data yet? The wizard helps you build your SEO foundation step-by-step.', x: '4%', y: '20%', arrow: 'down' },
+      { num: '02', title: '6-step flow', body: 'Business Profile → Seed Keywords → Competitors → Page Targets → Roadmap → Launch. Save & exit at any step.', x: '6%', y: '52%', arrow: 'up' },
+      { num: '03', title: 'Hands off to Strategy Planner', body: 'On completion, your AI-generated roadmap becomes your active strategy. Previous strategy backed up to history.', x: '50%', y: '78%', arrow: 'up' },
+    ],
+  },
+  {
+    id: 'fin',
+    title: 'Tour complete',
+    subtitle: 'You\'ve seen the whole product',
+    navLabel: '✓ Tour complete',
+    section: 'Account',
+    welcome: true,
+    finish: true,
+  },
+];
+
+/* ============================================================================
+   SCREEN RENDERERS — each returns the HTML for a single module's mocked UI
+============================================================================ */
+const screens = {
+
+  // ─── AUTH ───
+  auth: () => `
+    <div class="auth-bg">
+      <div class="auth-left">
+        <div class="wordmark" style="font-size:2.5rem; margin-bottom:1.5rem;"><span class="rank">Rank</span><span class="actions">Actions</span></div>
+        <div style="font-family:var(--display); font-size:2rem; font-weight:600; line-height:1.15; max-width:380px; margin-bottom:1rem;">SEO that tells you what to do next.</div>
+        <div style="color: var(--text-on-dark-mute); font-size:0.95rem; max-width:380px; line-height:1.6;">A complete SEO platform that turns Google Search Console data, page audits, and AI analysis into a prioritised list of actions you can complete in minutes — not months.</div>
+        <div style="display:flex; gap:1.5rem; margin-top:2.5rem; flex-wrap:wrap;">
+          <div style="font-size:0.78rem; color: var(--text-on-dark-soft);"><span style="color: var(--green-lt); font-weight:700;">✓</span> Built on real Google data</div>
+          <div style="font-size:0.78rem; color: var(--text-on-dark-soft);"><span style="color: var(--green-lt); font-weight:700;">✓</span> No SEO expertise required</div>
+          <div style="font-size:0.78rem; color: var(--text-on-dark-soft);"><span style="color: var(--green-lt); font-weight:700;">✓</span> AI Search Ready</div>
+        </div>
+      </div>
+      <div class="auth-right">
+        <div style="max-width:340px; width:100%; margin: 0 auto;">
+          <div style="font-family:var(--display); font-size:1.6rem; font-weight:700; margin-bottom:0.4rem;">Sign in to RankActions</div>
+          <div style="color: var(--text-on-dark-mute); font-size:0.88rem; margin-bottom:2rem;">Welcome back. Let's see what your sites need this week.</div>
+
+          <button style="width:100%; padding:0.85rem 1rem; background:white; color:#1a1a1a; border:none; border-radius:8px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:0.6rem; cursor:default; font-family:var(--body);">
+            <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+            Continue with Google
+          </button>
+
+          <div style="display:flex; align-items:center; gap:0.75rem; margin: 1.5rem 0; color: var(--text-on-dark-soft); font-size:0.75rem;">
+            <div style="flex:1; height:1px; background: var(--border-dark);"></div>
+            <span>or</span>
+            <div style="flex:1; height:1px; background: var(--border-dark);"></div>
+          </div>
+
+          <div style="margin-bottom:0.85rem;">
+            <div style="font-size:0.75rem; color:var(--text-on-dark-mute); margin-bottom:0.3rem; font-weight:500;">Email</div>
+            <div style="background:#1a1a1a; border:1px solid var(--border-dark); padding:0.7rem 0.9rem; border-radius:6px; font-size:0.9rem; color: var(--text-on-dark);">alex@morningrunco.com</div>
+          </div>
+          <div style="margin-bottom:1.25rem;">
+            <div style="font-size:0.75rem; color:var(--text-on-dark-mute); margin-bottom:0.3rem; font-weight:500;">Password</div>
+            <div style="background:#1a1a1a; border:1px solid var(--border-dark); padding:0.7rem 0.9rem; border-radius:6px; font-size:0.9rem; color: var(--text-on-dark);">••••••••••••</div>
+          </div>
+          <button style="width:100%; padding:0.85rem 1rem; background:var(--green); color:white; border:none; border-radius:8px; font-weight:700; cursor:default; font-family:var(--body);">Sign in</button>
+
+          <div style="text-align:center; margin-top:1.5rem; font-size:0.82rem; color: var(--text-on-dark-mute);">
+            New to RankActions? <span style="color: var(--green-lt); font-weight:600;">Create an account →</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
+
+  // ─── PLAN SELECTION ───
+  plans: () => `
+    <div style="text-align:center; margin-bottom:2rem;">
+      <div class="h1" style="margin-bottom:0.5rem;">Pick the plan that fits</div>
+      <div class="sub">All plans include real Google Search Console data, AI fix suggestions, and the weekly digest. Cancel anytime.</div>
+    </div>
+    <div class="grid-4">
+      ${[
+        { name: 'Free', price: '£0', tier: 'gray', features: ['1 site', '5 AI fixes / month', 'Page audit (limited)', 'Weekly digest'], cta: 'Start free' },
+        { name: 'Starter', price: '£14', tier: 'blue', features: ['1 site', 'Unlimited AI fixes', 'Page audit (more)', 'Rank tracker', 'Weekly digest'], cta: 'Choose Starter' },
+        { name: 'Pro', price: '£39', tier: 'green', features: ['5 sites (+£5/extra)', 'Strategy Planner', 'AI Content Generator', 'DataForSEO enrichment', 'Link building'], cta: 'Choose Pro', recommended: true },
+        { name: 'Agency', price: '£99', tier: 'purple', features: ['10 sites (+£5/extra)', 'Everything in Pro', 'White-label PDF reports', 'Priority support'], cta: 'Choose Agency' }
+      ].map(p => `
+        <div class="card" style="${p.recommended ? 'border:2px solid var(--green); position:relative;' : ''}">
+          ${p.recommended ? '<div style="position:absolute; top:-10px; left:50%; transform:translateX(-50%); background:var(--green); color:white; font-size:0.65rem; font-weight:700; padding:0.2rem 0.7rem; border-radius:3px; text-transform:uppercase; letter-spacing:0.08em;">RECOMMENDED</div>' : ''}
+          <div class="row between" style="margin-bottom:1rem;">
+            <div class="badge ${p.tier}">${p.name}</div>
+            ${p.tier === 'purple' ? '<div class="label-sm" style="color:var(--purple);">Agency</div>' : ''}
+          </div>
+          <div style="font-family:var(--display); font-size:2.2rem; font-weight:700; line-height:1;">${p.price}<span style="font-size:0.9rem; color:var(--text-2); font-weight:500;">/mo</span></div>
+          <div class="sub" style="margin: 0.5rem 0 1rem; font-size:0.82rem;">${p.name === 'Free' ? 'Forever free for individuals' : 'Billed monthly · VAT incl.'}</div>
+          <div style="margin: 1rem 0;">
+            ${p.features.map(f => `<div style="display:flex; gap:0.5rem; align-items:start; margin-bottom:0.5rem;"><span style="color:var(--green);">✓</span><span style="font-size:0.85rem;">${f}</span></div>`).join('')}
+          </div>
+          <button class="btn ${p.recommended ? '' : 'ghost'}" style="width:100%;">${p.cta}</button>
+        </div>
+      `).join('')}
+    </div>
+  `,
+
+  // ─── DASHBOARD ───
+  dashboard: () => `
+    <div class="row between" style="margin-bottom:1.5rem;">
+      <div>
+        <div class="h2">Welcome back, Alex</div>
+        <div class="sub">morningrunco.com · Last 28 days · Demo data</div>
+      </div>
+      <div class="row">
+        <button class="btn ghost">Export report</button>
+        <button class="btn">+ Add site</button>
+      </div>
+    </div>
+
+    <div class="grid-4" style="margin-bottom:1.5rem;">
+      <div class="card">
+        <div class="label-sm">Organic clicks</div>
+        <div class="stat-num green" style="margin-top:0.5rem;">121</div>
+        <div class="row between" style="margin-top:0.5rem;">
+          <div class="sub" style="font-size:0.78rem;">28d</div>
+          <div class="delta up">↑ 18%</div>
+        </div>
+        <svg class="spark" style="margin-top:0.5rem;" viewBox="0 0 120 32" preserveAspectRatio="none"><polyline points="0,24 20,22 40,20 60,18 80,12 100,10 120,8" fill="none" stroke="var(--green)" stroke-width="1.5"/></svg>
+      </div>
+      <div class="card">
+        <div class="label-sm">Impressions</div>
+        <div class="stat-num" style="margin-top:0.5rem;">20,558</div>
+        <div class="row between" style="margin-top:0.5rem;">
+          <div class="sub" style="font-size:0.78rem;">28d</div>
+          <div class="delta up">↑ 24%</div>
+        </div>
+        <svg class="spark" style="margin-top:0.5rem;" viewBox="0 0 120 32" preserveAspectRatio="none"><polyline points="0,22 20,20 40,16 60,18 80,12 100,10 120,6" fill="none" stroke="var(--green)" stroke-width="1.5"/></svg>
+      </div>
+      <div class="card">
+        <div class="label-sm">Avg. position</div>
+        <div class="stat-num" style="margin-top:0.5rem;">13.4</div>
+        <div class="row between" style="margin-top:0.5rem;">
+          <div class="sub" style="font-size:0.78rem;">28d</div>
+          <div class="delta up">↑ 2.1</div>
+        </div>
+        <svg class="spark" style="margin-top:0.5rem;" viewBox="0 0 120 32" preserveAspectRatio="none"><polyline points="0,8 20,10 40,14 60,12 80,18 100,20 120,24" fill="none" stroke="var(--green)" stroke-width="1.5"/></svg>
+      </div>
+      <div class="card">
+        <div class="label-sm">CTR</div>
+        <div class="stat-num" style="margin-top:0.5rem;">0.59%</div>
+        <div class="row between" style="margin-top:0.5rem;">
+          <div class="sub" style="font-size:0.78rem;">28d</div>
+          <div class="delta up">↑ 0.08</div>
+        </div>
+        <svg class="spark" style="margin-top:0.5rem;" viewBox="0 0 120 32" preserveAspectRatio="none"><polyline points="0,24 20,22 40,18 60,16 80,14 100,12 120,8" fill="none" stroke="var(--green)" stroke-width="1.5"/></svg>
+      </div>
+    </div>
+
+    <div class="grid-2" style="grid-template-columns: 2fr 1fr; margin-bottom:1.5rem;">
+      <div class="card">
+        <div class="row" style="margin-bottom:0.85rem;"><span class="badge purple">AI Summary</span></div>
+        <div style="font-family:var(--display); font-size:1.1rem; font-weight:500; line-height:1.5; color:var(--text);">
+          Strong week — clicks up 18% on the back of "best running shoes for beginners" keywords moving into the top 10. Three pages on page 2 are within striking distance of breaking through. The most impactful action this week: rewrite the title tag on /best-shoes-for-flat-feet/ to lead with the keyword and shorten by 12 characters.
+        </div>
+      </div>
+      <div class="card">
+        <div class="label-sm">Completed actions</div>
+        <div class="stat-num green" style="margin-top:0.5rem;">5</div>
+        <div class="sub" style="font-size:0.78rem; margin-top:0.4rem;">actions completed for morningrunco.com</div>
+        <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid var(--cream-soft);">
+          <div style="font-size:0.82rem; margin-bottom:0.4rem;"><span style="color:var(--green); font-weight:700;">✓</span> Title rewrite — /shoe-guide</div>
+          <div style="font-size:0.82rem; margin-bottom:0.4rem;"><span style="color:var(--green); font-weight:700;">✓</span> Meta description — /reviews</div>
+          <div style="font-size:0.82rem; margin-bottom:0.4rem;"><span style="color:var(--green); font-weight:700;">✓</span> Internal link audit</div>
+          <div style="font-size:0.82rem; color:var(--text-3);">+ 2 more this week</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="row between" style="margin-bottom:1rem;">
+        <div class="h3">Priority actions <span class="badge red" style="margin-left:0.5rem;">3 HIGH</span></div>
+        <div class="sub" style="font-size:0.82rem;">9 remaining</div>
+      </div>
+      ${[
+        { type: 'red', cat: 'SEO', title: 'Rewrite title tag for /best-shoes-for-flat-feet', impact: '+ ~35 clicks/month estimated', fix: 'Lead with "Best Running Shoes For Flat Feet" and shorten to 58 chars.' },
+        { type: 'amber', cat: 'AI', title: 'Add FAQPage schema to /running-shoes-guide', impact: 'Strongest signal for Google AI Overviews citations', fix: 'JSON-LD with 3-5 common customer questions.' },
+        { type: 'amber', cat: 'SEO', title: 'Internal link from /reviews to /best-shoes-for-flat-feet', impact: 'Topical authority transfer to your highest-converting page', fix: 'Add contextual link in the "Top recommendations" paragraph.' },
+      ].map(a => `
+        <div style="display:flex; gap:1rem; padding: 0.85rem 0; border-bottom: 1px solid var(--cream-soft);">
+          <div style="width:6px; background: var(--${a.type}); border-radius:3px; flex-shrink:0;"></div>
+          <div style="flex:1;">
+            <div class="row" style="margin-bottom:0.4rem;">
+              <div class="badge ${a.cat === 'SEO' ? 'blue' : a.cat === 'AI' ? 'purple' : 'amber'}">${a.cat}</div>
+              <div style="font-weight:600; font-size:0.95rem;">${a.title}</div>
+            </div>
+            <div style="font-size:0.83rem; color:var(--text-2); margin-bottom:0.3rem;"><strong style="color:var(--red);">Impact:</strong> ${a.impact}</div>
+            <div style="font-size:0.83rem; color:var(--text-2);"><strong style="color:var(--green);">Fix:</strong> ${a.fix}</div>
+          </div>
+          <button class="btn" style="align-self:start;">✨ Fix</button>
+        </div>
+      `).join('')}
+    </div>
+  `,
+
+  // ─── SITE DETAIL ───
+  site: () => `
+    <div class="row between" style="margin-bottom:0.5rem;">
+      <div class="h2">morningrunco.com</div>
+      <div class="row">
+        <span class="badge green">Demo data</span>
+        <button class="btn ghost">Switch site ▾</button>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab">Overview</div>
+      <div class="tab">SEO Opportunities</div>
+      <div class="tab">Conversions</div>
+      <div class="tab">Issues</div>
+      <div class="tab active">Striking Distance ⭐</div>
+    </div>
+
+    <div class="card" style="margin-bottom:1rem;">
+      <div class="row" style="margin-bottom:0.5rem;">
+        <span class="badge amber">STRIKING DISTANCE (POSITIONS 11-20)</span>
+      </div>
+      <div class="sub" style="font-size:0.85rem;">These keywords are close to page 1 — small improvements could unlock significant traffic.</div>
+    </div>
+
+    <div class="stack">
+      ${[
+        { kw: 'best running shoes for flat feet', pos: 11, imp: '1,240', clk: '8', ctr: '0.65%', action: '✍ Write page', tone: 'green' },
+        { kw: 'how to choose running shoes', pos: 12, imp: '890', clk: '4', ctr: '0.45%', action: '✨ Fix title', tone: 'amber' },
+        { kw: 'running shoes for beginners uk', pos: 13, imp: '720', clk: '3', ctr: '0.42%', action: '✍ Write blog post', tone: 'green' },
+        { kw: 'best trail running shoes 2026', pos: 15, imp: '610', clk: '2', ctr: '0.33%', action: '✍ Write page', tone: 'green' },
+        { kw: 'cushioned vs minimalist shoes', pos: 17, imp: '480', clk: '1', ctr: '0.21%', action: '✨ Fix meta', tone: 'amber' },
+      ].map(k => `
+        <div class="card" style="padding: 0.85rem 1rem;">
+          <div class="row between">
+            <div style="flex:1;">
+              <div style="font-weight:600; font-size:0.95rem;">${k.kw}</div>
+              <div style="display:flex; gap:1.5rem; margin-top:0.35rem; color:var(--text-2); font-size:0.78rem;">
+                <span>Pos <strong class="pos" style="color:var(--amber);">#${k.pos}</strong></span>
+                <span>Imp <strong>${k.imp}</strong></span>
+                <span>Clicks <strong>${k.clk}</strong></span>
+                <span>CTR <strong>${k.ctr}</strong></span>
+              </div>
+            </div>
+            <button class="btn ${k.tone === 'green' ? '' : 'ghost'}" style="${k.tone === 'amber' ? 'border-color:var(--amber); color:var(--amber);' : ''}">${k.action}</button>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `,
+
+  // ─── PAGE AUDIT ───
+  audit: () => `
+    <div class="row between" style="margin-bottom:1.5rem;">
+      <div>
+        <div class="h2">Page SEO Audit</div>
+        <div class="sub">https://morningrunco.com/best-shoes-for-flat-feet</div>
+      </div>
+      <div class="row">
+        <button class="btn ghost">Run new audit</button>
+        <button class="btn dark">📄 Export PDF</button>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:1rem; background:var(--dark); color:white;">
+      <div class="row" style="margin-bottom:0.5rem;">
+        <span class="badge" style="background:rgba(30,168,99,0.2); color:var(--green-lt);">VERDICT</span>
+      </div>
+      <div style="font-family:var(--display); font-size:1.25rem; font-weight:500; line-height:1.5;">
+        This page has strong on-page SEO fundamentals, below-average page speed, and limited readiness for AI search. We've identified 9 opportunities to improve search visibility and conversion within 4-6 weeks.
+      </div>
+    </div>
+
+    <div class="grid-3" style="margin-bottom:1.5rem;">
+      <div class="card" style="text-align:center;">
+        <div class="label-sm">On-Page SEO</div>
+        <div class="gauge" style="margin: 0.5rem auto; max-width:130px;">
+          <svg viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="42" fill="none" stroke="#eee" stroke-width="8"/>
+            <circle cx="50" cy="50" r="42" fill="none" stroke="var(--green)" stroke-width="8"
+                    stroke-dasharray="${89 * 2.64} 264" stroke-linecap="round"/>
+          </svg>
+          <div class="gauge-num"><div class="v" style="color:var(--green);">89</div><div class="g">Grade B</div></div>
+        </div>
+        <div class="sub" style="font-size:0.8rem;">11 of 13 checks passed</div>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div class="label-sm">Page Speed</div>
+        <div class="gauge" style="margin: 0.5rem auto; max-width:130px;">
+          <svg viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="42" fill="none" stroke="#eee" stroke-width="8"/>
+            <circle cx="50" cy="50" r="42" fill="none" stroke="var(--amber)" stroke-width="8"
+                    stroke-dasharray="${58 * 2.64} 264" stroke-linecap="round"/>
+          </svg>
+          <div class="gauge-num"><div class="v" style="color:var(--amber);">58</div><div class="g">Needs work</div></div>
+        </div>
+        <div class="sub" style="font-size:0.8rem;">LCP 3.6s · CLS 0.001</div>
+      </div>
+      <div class="card" style="text-align:center;">
+        <div class="label-sm">AI Search Ready</div>
+        <div class="gauge" style="margin: 0.5rem auto; max-width:130px;">
+          <svg viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="42" fill="none" stroke="#eee" stroke-width="8"/>
+            <circle cx="50" cy="50" r="42" fill="none" stroke="var(--amber)" stroke-width="8"
+                    stroke-dasharray="${60 * 2.64} 264" stroke-linecap="round"/>
+          </svg>
+          <div class="gauge-num"><div class="v" style="color:var(--amber);">60</div><div class="g">Partial</div></div>
+        </div>
+        <div class="sub" style="font-size:0.8rem;">4 of 8 signals</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="row between" style="margin-bottom:1rem;">
+        <div class="h3">Top 3 Priorities</div>
+        <div class="sub" style="font-size:0.82rem;">Impact-scored, one of each kind</div>
+      </div>
+      ${[
+        { n: 1, cat: 'SPEED', color: 'amber', title: 'Eliminate render-blocking resources', impact: 'Roughly 13% of mobile visitors give up before slow pages finish loading.', fix: 'Resources are blocking the first paint. Defer non-critical CSS and JS.' },
+        { n: 2, cat: 'AI', color: 'purple', title: 'Add FAQPage structured data', impact: 'FAQ schema is one of the strongest signals for Google AI Overviews and ChatGPT citations.', fix: 'JSON-LD FAQPage with at least 3 question/answer pairs covering your most common client questions.' },
+        { n: 3, cat: 'SEO', color: 'blue', title: '36 of 41 images missing alt text', impact: '88% of your images can\'t be understood by Google or screen readers.', fix: 'Add descriptive alt text to every image. Include keywords where natural.' },
+      ].map(p => `
+        <div style="display:flex; gap:1rem; padding: 0.85rem 0; border-bottom:1px solid var(--cream-soft);">
+          <div style="width:28px; height:28px; border-radius:50%; background:var(--dark); color:white; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.85rem; flex-shrink:0;">${p.n}</div>
+          <div style="flex:1;">
+            <div class="row" style="margin-bottom:0.4rem;">
+              <div class="badge ${p.color}">${p.cat}</div>
+              <div style="font-weight:600;">${p.title}</div>
+            </div>
+            <div style="font-size:0.83rem; color:var(--text-2); margin-bottom:0.3rem;"><strong style="color:var(--red);">Impact:</strong> ${p.impact}</div>
+            <div style="font-size:0.83rem; color:var(--text-2);"><strong style="color:var(--green);">Fix:</strong> ${p.fix}</div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `,
+
+  // ─── STRATEGY SUGGESTIONS ───
+  'strategy-suggestions': () => `
+    <div class="row between" style="margin-bottom:1.5rem;">
+      <div>
+        <div class="h2">Strategy Planner</div>
+        <div class="sub">Three AI-generated strategy topics for morningrunco.com</div>
+      </div>
+      <div class="row">
+        <button class="btn ghost">↻ Regenerate</button>
+        <button class="btn">Custom topic</button>
+      </div>
+    </div>
+
+    <div class="grid-3">
+      ${[
+        { topic: 'Running shoe buying guides', reason: 'Strong existing rankings for related queries (positions 11-15). Building a pillar page here could unlock 8-12 cluster keywords already getting impressions.', traffic: 'High', diff: 'Medium', pillar: 'The Complete Guide to Choosing Your First Pair of Running Shoes', clusters: 8 },
+        { topic: 'Beginner runner training plans', reason: 'Adjacent topical area with strong commercial intent. Your reviews and gait analysis posts can support this naturally. Less competition than gear-only content.', traffic: 'Medium', diff: 'Medium', pillar: 'Couch to 5K: A 10-Week Plan That Actually Works', clusters: 6, highlighted: true },
+        { topic: 'Trail vs road running', reason: 'Higher commercial intent but smaller search volume. Could position you for high-value gear comparison queries.', traffic: 'Low', diff: 'Low', pillar: 'Trail vs Road: Which Type of Running Suits You?', clusters: 5 },
+      ].map(s => `
+        <div class="card" style="${s.highlighted ? 'border:2px solid var(--green);' : ''}">
+          <div class="row between" style="margin-bottom:0.5rem;">
+            <span class="badge ${s.traffic === 'High' ? 'green' : s.traffic === 'Medium' ? 'amber' : 'gray'}">${s.traffic} traffic</span>
+            <span class="badge ${s.diff === 'Low' ? 'green' : 'amber'}">${s.diff} difficulty</span>
+          </div>
+          <div class="h3" style="margin-bottom:0.5rem;">${s.topic}</div>
+          <div style="font-size:0.82rem; color:var(--text-2); margin-bottom:1rem;">${s.reason}</div>
+          <div style="background:var(--cream-soft); padding:0.7rem; border-radius:4px; margin-bottom:1rem;">
+            <div class="label-sm" style="margin-bottom:0.3rem;">Pillar</div>
+            <div style="font-size:0.85rem; font-weight:500;">${s.pillar}</div>
+            <div class="label-sm" style="margin-top:0.5rem;">+ ${s.clusters} cluster pages</div>
+          </div>
+          <button class="btn ${s.highlighted ? '' : 'ghost'}" style="width:100%;">Accept this strategy</button>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="card" style="margin-top:1.5rem;">
+      <div class="row between">
+        <div>
+          <div class="row"><span class="badge purple">DATAFORSEO</span><div style="font-weight:600;">Real keyword data available</div></div>
+          <div class="sub" style="margin-top:0.3rem; font-size:0.85rem;">Click to enrich suggestions with live search volume, CPC and competition data from Google Ads.</div>
+        </div>
+        <button class="btn">Enrich with real data</button>
+      </div>
+    </div>
+  `,
+
+  // ─── STRATEGY PLANNER ───
+  'strategy-planner': () => `
+    <div class="row between" style="margin-bottom:1.5rem;">
+      <div>
+        <div class="h2">Running Shoe Buying Guides</div>
+        <div class="sub">Strategy started 13 May 2026 · Synced across all devices</div>
+      </div>
+      <div class="row">
+        <button class="btn ghost">↻ Generate new</button>
+        <button class="btn ghost">📄 Export</button>
+      </div>
+    </div>
+
+    <div class="grid-2" style="grid-template-columns: 1fr 1fr; gap:1rem; margin-bottom:1.5rem;">
+      <div class="card">
+        <div class="label-sm">Pillar page</div>
+        <div class="h3" style="margin: 0.5rem 0;">The Complete Guide to Choosing Your First Pair of Running Shoes</div>
+        <div class="row" style="margin-bottom:0.75rem;">
+          <span class="badge amber">Drafted</span>
+          <span class="sub" style="font-size:0.78rem;">2,400 words · 3 internal links</span>
+        </div>
+        <div class="row">
+          <button class="btn ghost" style="font-size:0.78rem; padding:0.3rem 0.6rem;">Edit</button>
+          <button class="btn" style="font-size:0.78rem; padding:0.3rem 0.6rem;">Publish</button>
+        </div>
+      </div>
+      <div class="card" style="background:var(--dark); color:white;">
+        <div class="label-sm" style="color:var(--text-on-dark-mute);">Progress</div>
+        <div style="display:flex; align-items:baseline; gap:0.5rem; margin: 0.5rem 0;">
+          <div class="stat-num" style="color:var(--green-lt);">3</div>
+          <div style="color:var(--text-on-dark-mute);">/ 9 published</div>
+        </div>
+        <div style="height:6px; background: rgba(255,255,255,0.1); border-radius:3px; margin-top:0.5rem;">
+          <div style="width:33%; height:100%; background:var(--green-lt); border-radius:3px;"></div>
+        </div>
+        <div style="font-size:0.78rem; color:var(--text-on-dark-mute); margin-top:0.75rem;">3 published · 2 drafted · 4 not started</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="row between" style="margin-bottom:0.85rem;">
+        <div class="h3">Cluster pages</div>
+        <div class="sub" style="font-size:0.82rem;">Link from pillar → each cluster</div>
+      </div>
+      ${[
+        { kw: 'best running shoes for flat feet', vol: '1,240', diff: 'Medium', status: 'published', tone: 'green' },
+        { kw: 'how to choose running shoes', vol: '890', diff: 'Low', status: 'published', tone: 'green' },
+        { kw: 'cushioned vs minimalist shoes', vol: '480', diff: 'Medium', status: 'published', tone: 'green' },
+        { kw: 'running shoes for overpronation', vol: '420', diff: 'Low', status: 'drafted', tone: 'amber' },
+        { kw: 'best trail running shoes 2026', vol: '380', diff: 'Low', status: 'drafted', tone: 'amber' },
+        { kw: 'running shoes for beginners uk', vol: '320', diff: 'Low', status: 'not_started', tone: 'gray' },
+        { kw: 'how often to replace running shoes', vol: '260', diff: 'Medium', status: 'not_started', tone: 'gray' },
+        { kw: 'running shoe sizing guide', vol: '240', diff: 'Medium', status: 'not_started', tone: 'gray' },
+      ].map(c => `
+        <div class="cluster" style="margin-bottom:0.5rem;">
+          <div style="flex:1;">
+            <div style="font-weight:500; font-size:0.9rem;">${c.kw}</div>
+            <div class="sub" style="font-size:0.78rem;">${c.vol} searches/mo · ${c.diff} difficulty</div>
+          </div>
+          <span class="badge ${c.tone}">${c.status.replace('_', ' ')}</span>
+          <button class="btn ${c.status === 'not_started' ? '' : 'ghost'}" style="font-size:0.78rem; padding:0.35rem 0.6rem;">
+            ${c.status === 'not_started' ? '✍ Write' : c.status === 'drafted' ? 'Edit' : 'View'}
+          </button>
+        </div>
+      `).join('')}
+    </div>
+  `,
+
+  // ─── LINK BUILDING ───
+  links: () => `
+    <div class="row between" style="margin-bottom:1.5rem;">
+      <div>
+        <div class="h2">Link Building</div>
+        <div class="sub">Gemini-grounded opportunities for morningrunco.com</div>
+      </div>
+      <div class="row">
+        <button class="btn ghost">↻ Refresh research</button>
+        <button class="btn">+ Add prospect</button>
+      </div>
+    </div>
+
+    <div class="grid-2" style="grid-template-columns: 1.4fr 1fr; gap:1rem;">
+      <div class="card">
+        <div class="row between" style="margin-bottom:1rem;">
+          <div class="h3">Opportunities</div>
+          <span class="badge purple">Gemini grounded</span>
+        </div>
+        ${[
+          { title: 'Guest post on runnersworld-style.example', type: 'Guest post', diff: 'Medium', value: 'High DA · Strong topical match', tone: 'green' },
+          { title: 'Resource page on parkrun-uk.example', type: 'Resource link', diff: 'Low', value: 'They\'ve linked to similar buying guides before', tone: 'green' },
+          { title: 'Outreach to BeginnerRunner newsletter', type: 'Newsletter mention', diff: 'Low', value: '14k UK runner subscribers', tone: 'green' },
+          { title: 'Comment on local-running-club.example article', type: 'Comment link', diff: 'Low', value: 'Low effort, low-value placement', tone: 'gray' },
+        ].map(o => `
+          <div style="padding: 0.85rem 0; border-bottom:1px solid var(--cream-soft);">
+            <div style="font-weight:600; font-size:0.95rem; margin-bottom:0.3rem;">${o.title}</div>
+            <div class="row" style="margin-bottom:0.4rem;">
+              <span class="badge ${o.tone}">${o.type}</span>
+              <span class="sub" style="font-size:0.78rem;">${o.diff} difficulty</span>
+            </div>
+            <div class="sub" style="font-size:0.83rem;">${o.value}</div>
+            <div class="row" style="margin-top:0.5rem;">
+              <button class="btn" style="font-size:0.78rem; padding:0.3rem 0.6rem;">→ Add to prospects</button>
+              <button class="btn ghost" style="font-size:0.78rem; padding:0.3rem 0.6rem;">✍ Draft outreach</button>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="card">
+        <div class="row between" style="margin-bottom:1rem;">
+          <div class="h3">Prospects</div>
+          <div class="sub" style="font-size:0.78rem;">12 active</div>
+        </div>
+        ${[
+          { domain: 'runwithus.example', status: 'Won', tone: 'green', date: 'May 9' },
+          { domain: 'runnersworld-style.example', status: 'Replied', tone: 'amber', date: 'May 11' },
+          { domain: 'parkrun-uk.example', status: 'Contacted', tone: 'blue', date: 'May 12' },
+          { domain: 'local-running-club.example', status: 'Contacted', tone: 'blue', date: 'May 12' },
+          { domain: 'BeginnerRunner', status: 'Identified', tone: 'gray', date: 'May 13' },
+        ].map(p => `
+          <div class="prospect-card" style="margin-bottom:0.5rem;">
+            <div class="row between">
+              <div>
+                <div style="font-weight:500; font-size:0.88rem;">${p.domain}</div>
+                <div class="sub" style="font-size:0.74rem;">${p.date}</div>
+              </div>
+              <span class="badge ${p.tone}">${p.status}</span>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `,
+
+  // ─── CONTENT GENERATOR ───
+  content: () => `
+    <div class="row between" style="margin-bottom:1.5rem;">
+      <div>
+        <div class="h2">AI Content Generator</div>
+        <div class="sub">Production-ready HTML blog post · RankActions template</div>
+      </div>
+      <div class="row">
+        <button class="btn ghost">Toggle annotations</button>
+        <button class="btn">📋 Copy HTML</button>
+      </div>
+    </div>
+
+    <div class="grid-2" style="grid-template-columns: 1fr 1.4fr; gap:1rem;">
+      <div class="card">
+        <div class="h3" style="margin-bottom:1rem;">Generate</div>
+        <div style="margin-bottom:0.85rem;">
+          <div class="label-sm" style="margin-bottom:0.3rem;">Target keyword</div>
+          <div style="background:var(--cream-soft); padding:0.6rem 0.85rem; border-radius:4px; font-size:0.88rem;">cushioned vs minimalist shoes</div>
+        </div>
+        <div style="margin-bottom:0.85rem;">
+          <div class="label-sm" style="margin-bottom:0.3rem;">Page type</div>
+          <div class="row" style="gap:0.4rem;">
+            <span class="badge gray">Article</span>
+            <span class="badge green">Guide</span>
+            <span class="badge gray">FAQ</span>
+            <span class="badge gray">Listicle</span>
+          </div>
+        </div>
+        <div style="margin-bottom:0.85rem;">
+          <div class="label-sm" style="margin-bottom:0.3rem;">Internal link pool</div>
+          <div style="background:var(--cream-soft); padding:0.6rem 0.85rem; border-radius:4px; font-size:0.78rem;">
+            8 pages from your top GSC results + homepage
+          </div>
+        </div>
+        <div style="margin-bottom:1rem;">
+          <div class="label-sm" style="margin-bottom:0.3rem;">Length</div>
+          <div class="row" style="gap:0.4rem;">
+            <span class="badge gray">800</span>
+            <span class="badge gray">1200</span>
+            <span class="badge green">1800</span>
+            <span class="badge gray">2400</span>
+          </div>
+        </div>
+        <button class="btn" style="width:100%;">✨ Generate post</button>
+        <div class="sub" style="font-size:0.78rem; margin-top:0.75rem; text-align:center;">~30 seconds · Claude Sonnet 4.5</div>
+      </div>
+
+      <div class="card">
+        <div class="row between" style="margin-bottom:0.85rem;">
+          <div class="h3">Annotated preview</div>
+          <span class="badge purple">Sandboxed iframe</span>
+        </div>
+        <div class="preview-frame">
+          <h1><span class="anno">H1</span>Cushioned vs Minimalist Running Shoes: Which Is Right for You?</h1>
+          <p style="font-size:0.82rem; color:#555;">When you're choosing your next pair of running shoes, one of the biggest decisions you'll face is how much cushioning you actually need. Maximum-cushion shoes promise comfort over long distances; minimalist designs claim to strengthen your feet and improve form. This guide walks through what each style actually delivers and how to pick the right one for you.</p>
+          <h2><span class="anno h2">H2</span>What counts as a cushioned running shoe?</h2>
+          <p style="font-size:0.82rem; color:#555;">Cushioned shoes use thick foam stacks (typically 28-40mm under the heel) to absorb impact. They work especially well for heel-strikers, heavier runners, and anyone training for longer distances. The trade-off is added weight and a slightly less responsive feel — most runners find this worthwhile for the protection. See our <span class="anno link">LINK</span><a style="color:var(--green); text-decoration:none;">best running shoes for flat feet</a> for top cushioned picks.</p>
+          <h2><span class="anno h2">H2</span>The minimalist case</h2>
+          <p style="font-size:0.82rem; color:#555;">Minimalist shoes (under 8mm stack height) encourage a midfoot or forefoot strike and give your feet more direct ground feedback. Proponents argue this builds foot strength over time and reduces certain injury patterns. The transition needs care though — going minimalist too quickly is a common cause of calf strains and bone stress injuries.</p>
+        </div>
+      </div>
+    </div>
+  `,
+
+  // ─── RANK TRACKER ───
+  rank: () => `
+    <div class="row between" style="margin-bottom:1.5rem;">
+      <div>
+        <div class="h2">Rank Tracker</div>
+        <div class="sub">Daily snapshots · 90-day rolling history</div>
+      </div>
+      <div class="row">
+        <button class="btn ghost">📧 Alert settings</button>
+        <button class="btn">+ Track keyword</button>
+      </div>
+    </div>
+
+    <div class="grid-4" style="margin-bottom:1.5rem;">
+      <div class="card">
+        <div class="label-sm">Tracked keywords</div>
+        <div class="stat-num" style="margin-top:0.5rem;">24</div>
+      </div>
+      <div class="card">
+        <div class="label-sm">Avg. position</div>
+        <div class="stat-num green" style="margin-top:0.5rem;">13.4</div>
+        <div class="delta up" style="margin-top:0.3rem;">↑ 2.1 vs last week</div>
+      </div>
+      <div class="card">
+        <div class="label-sm">On page 1</div>
+        <div class="stat-num" style="margin-top:0.5rem;">9</div>
+        <div class="delta up" style="margin-top:0.3rem;">↑ 2 this month</div>
+      </div>
+      <div class="card">
+        <div class="label-sm">Last snapshot</div>
+        <div class="h3" style="margin-top:0.5rem;">Today</div>
+        <div class="sub" style="font-size:0.78rem;">06:00 UK</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <table class="kw">
+        <thead>
+          <tr>
+            <th>Keyword</th>
+            <th>Current</th>
+            <th>7d</th>
+            <th>30d</th>
+            <th>Trend</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${[
+            { kw: 'best running shoes flat feet', cur: 4, d7: 6, d30: 9 },
+            { kw: 'how to choose running shoes', cur: 5, d7: 5, d30: 7 },
+            { kw: 'running shoes for beginners uk', cur: 7, d7: 8, d30: 11 },
+            { kw: 'cushioned vs minimalist shoes', cur: 9, d7: 11, d30: 14 },
+            { kw: 'best trail running shoes 2026', cur: 11, d7: 12, d30: 18 },
+            { kw: 'running shoes for overpronation', cur: 13, d7: 14, d30: 16 },
+            { kw: 'best running shoes under 100', cur: 16, d7: 17, d30: 18 },
+            { kw: 'how often to replace running shoes', cur: 18, d7: 18, d30: 22 },
+          ].map(r => {
+            const delta = r.d30 - r.cur;
+            const arrow = delta > 0 ? '↑' : delta < 0 ? '↓' : '–';
+            const color = delta > 0 ? 'var(--green)' : delta < 0 ? 'var(--red)' : 'var(--text-2)';
+            const posColor = r.cur <= 3 ? 'var(--green)' : r.cur <= 10 ? 'var(--green)' : r.cur <= 20 ? 'var(--amber)' : 'var(--red)';
+            return `<tr>
+              <td>${r.kw}</td>
+              <td class="pos" style="color:${posColor};">#${r.cur}</td>
+              <td class="pos">#${r.d7}</td>
+              <td class="pos">#${r.d30}</td>
+              <td><span style="color:${color}; font-weight:600;">${arrow} ${Math.abs(delta) || '—'}</span></td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+  `,
+
+  // ─── SETTINGS ───
+  settings: () => `
+    <div class="h2" style="margin-bottom:1.5rem;">Settings</div>
+
+    <div class="grid-2" style="gap:1rem; margin-bottom:1rem;">
+      <div class="card">
+        <div class="h3" style="margin-bottom:1rem;">Profile</div>
+        <div class="setting-row">
+          <div><div class="label">Name</div></div>
+          <div class="value">Alex Demo</div>
+        </div>
+        <div class="setting-row">
+          <div><div class="label">Email</div></div>
+          <div class="value">alex@morningrunco.com</div>
+        </div>
+        <div class="setting-row">
+          <div><div class="label">Plan</div></div>
+          <div><span class="badge green">Pro</span></div>
+        </div>
+        <div class="setting-row">
+          <div><div class="label">Member since</div></div>
+          <div class="value">April 2026</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="h3" style="margin-bottom:1rem;">Connected accounts</div>
+        <div class="setting-row">
+          <div>
+            <div class="label">Google Search Console</div>
+            <div class="sub" style="font-size:0.78rem;">Read-only access · 4 sites available</div>
+          </div>
+          <div class="row"><span class="badge green">Connected</span><button class="btn ghost" style="font-size:0.78rem; padding:0.3rem 0.6rem;">Disconnect</button></div>
+        </div>
+        <div class="setting-row">
+          <div>
+            <div class="label">Stripe billing</div>
+            <div class="sub" style="font-size:0.78rem;">Pro · £39/month · Next invoice 12 June</div>
+          </div>
+          <button class="btn ghost" style="font-size:0.78rem; padding:0.3rem 0.6rem;">Manage</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:1rem;">
+      <div class="row between" style="margin-bottom:1rem;">
+        <div class="h3">Your sites</div>
+        <button class="btn">+ Add site (£5/mo)</button>
+      </div>
+      ${[
+        { url: 'morningrunco.com', status: 'Demo data', tone: 'green' },
+        { url: 'trail-shoes.example', status: 'Demo data', tone: 'green' },
+        { url: 'gait-analysis.example', status: 'Demo data', tone: 'green' },
+        { url: 'beginner-runner.example', status: 'Demo data', tone: 'green' },
+      ].map(s => `
+        <div class="setting-row">
+          <div>
+            <div class="label">${s.url}</div>
+            <div class="sub" style="font-size:0.78rem;">Connected via GSC OAuth</div>
+          </div>
+          <div class="row"><span class="badge ${s.tone}">${s.status}</span></div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="card">
+      <div class="h3" style="margin-bottom:1rem;">Your data & privacy</div>
+      <div class="setting-row">
+        <div>
+          <div class="label">Download your data <span style="font-size:0.7rem; color:var(--text-2); font-weight:400;">(GDPR Art. 15)</span></div>
+          <div class="sub" style="font-size:0.78rem;">JSON export of all data we hold about you — profile, plan, sites, strategies, snapshots, audit log.</div>
+        </div>
+        <button class="btn ghost">⬇ Export</button>
+      </div>
+      <div class="setting-row">
+        <div>
+          <div class="label">Cookie preferences</div>
+          <div class="sub" style="font-size:0.78rem;">Currently: Essential + Analytics</div>
+        </div>
+        <button class="btn ghost">Update</button>
+      </div>
+      <div class="setting-row">
+        <div>
+          <div class="label" style="color:var(--red);">Delete account <span style="font-size:0.7rem; color:var(--text-2); font-weight:400;">(GDPR Art. 17)</span></div>
+          <div class="sub" style="font-size:0.78rem;">Permanently delete all your data. Cannot be undone.</div>
+        </div>
+        <button class="btn ghost" style="border-color:var(--red); color:var(--red);">Delete</button>
+      </div>
+    </div>
+  `,
+
+  // ─── STARTING OUT WIZARD ───
+  wizard: () => `
+    <div class="row between" style="margin-bottom:1.5rem;">
+      <div>
+        <div class="h2">Starting Out</div>
+        <div class="sub">For sites with no Google Search Console data yet · Save & exit any time</div>
+      </div>
+      <button class="btn ghost">Save & exit</button>
+    </div>
+
+    <div class="card" style="margin-bottom:1rem;">
+      <div class="row" style="justify-content:space-between; max-width:600px; margin: 0 auto 1rem;">
+        ${[1,2,3,4,5,6].map(n => `
+          <div style="display:flex; flex-direction:column; align-items:center; gap:0.4rem; flex:1; position:relative;">
+            <div class="step-circle ${n === 1 ? 'done' : n === 2 ? 'active' : ''}">${n === 1 ? '✓' : n}</div>
+            <div style="font-size:0.7rem; color:${n === 2 ? 'var(--text)' : 'var(--text-3)'}; font-weight:${n === 2 ? '600' : '500'};">
+              ${['Business profile', 'Seed keywords', 'Competitors', 'Page targets', 'Roadmap', 'Launch'][n-1]}
+            </div>
+            ${n < 6 ? `<div style="position:absolute; top:15px; left:60%; right:-40%; height:2px; background:${n === 1 ? 'var(--green-lt)' : 'var(--cream-soft)'};"></div>` : ''}
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="h3" style="margin-bottom:0.4rem;">Step 2 of 6: Seed keywords</div>
+      <div class="sub" style="margin-bottom:1.5rem;">Based on your business profile, here are the keywords your potential customers are searching for. Review and refine.</div>
+
+      <div style="background:var(--cream-soft); padding:1rem; border-radius:6px; margin-bottom:1.5rem;">
+        <div class="row" style="margin-bottom:0.5rem;">
+          <span class="badge purple">Generated by AI</span>
+          <div class="sub" style="font-size:0.8rem;">From your business profile: "Running shoe reviews and buying guides for UK beginners"</div>
+        </div>
+      </div>
+
+      <div class="stack" style="gap:0.5rem;">
+        ${[
+          { kw: 'best running shoes for beginners uk', vol: '320', intent: 'Commercial' },
+          { kw: 'how to choose your first running shoes', vol: '280', intent: 'Informational' },
+          { kw: 'running shoe sizing guide', vol: '210', intent: 'Informational' },
+          { kw: 'cushioned vs minimalist running shoes', vol: '180', intent: 'Informational' },
+          { kw: 'best running shoes under 100', vol: '140', intent: 'Commercial' },
+          { kw: 'running shoes for flat feet', vol: '110', intent: 'Commercial' },
+          { kw: 'how often to replace running shoes', vol: '90', intent: 'Informational' },
+        ].map(k => `
+          <div class="cluster">
+            <input type="checkbox" checked style="accent-color:var(--green);">
+            <div style="flex:1;">
+              <div style="font-weight:500; font-size:0.9rem;">${k.kw}</div>
+              <div class="sub" style="font-size:0.78rem;">${k.vol} searches/mo · ${k.intent} intent</div>
+            </div>
+            <button class="btn ghost" style="font-size:0.74rem; padding:0.25rem 0.5rem;">Remove</button>
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="row between" style="margin-top:1.5rem; padding-top:1rem; border-top:1px solid var(--cream-soft);">
+        <button class="btn ghost">← Back</button>
+        <button class="btn">Continue to competitors →</button>
+      </div>
+    </div>
+  `,
+};
+
+/* ============================================================================
+   APP LOGIC
+============================================================================ */
+let currentStep = 0;
+let visited = new Set([0]);
+
+// Helper: shift the tooltip arrow so it points at the pin, even when the
+// tooltip has been clamped to keep it within the visible area.
+//   tip         - the tooltip element
+//   offsetPx    - desired distance from tooltip's leading edge to the arrow
+//   axis        - 'horizontal' (for arrow-up / arrow-down) or 'vertical'
+function adjustArrowOffset(tip, offsetPx, axis) {
+  // Keep the arrow within sane bounds — never closer than 12px to either edge
+  // of its own dimension, so it always visually "points" at something tooltip-y.
+  const min = 12;
+  const dim = axis === 'horizontal' ? tip.offsetWidth : tip.offsetHeight;
+  const clamped = Math.max(min, Math.min(offsetPx, dim - min));
+  if (axis === 'horizontal') {
+    tip.style.setProperty('--arrow-x', clamped + 'px');
+  } else {
+    tip.style.setProperty('--arrow-y', clamped + 'px');
+  }
+}
+
+function render() {
+  const step = steps[currentStep];
+  document.getElementById('step-title').textContent = step.title;
+  document.getElementById('step-sub').textContent = step.subtitle;
+  document.getElementById('prev').disabled = currentStep === 0;
+  document.getElementById('next').disabled = currentStep === steps.length - 1;
+  document.getElementById('next').innerHTML = currentStep === steps.length - 1
+    ? 'Tour complete'
+    : 'Next → <span class="ctrl-kbd">→</span>';
+
+  // Update progress
+  const pct = Math.round((visited.size / steps.length) * 100);
+  document.getElementById('progress-text').textContent = `${visited.size}/${steps.length}`;
+  document.getElementById('progress-fill').style.width = pct + '%';
+
+  // Sidebar
+  renderNav();
+
+  // Stage
+  const stage = document.getElementById('stage-inner');
+  stage.innerHTML = '';
+
+  if (step.welcome) {
+    stage.innerHTML = renderWelcome(step);
+    return;
+  }
+
+  // Mock app chrome
+  const chrome = `
+    <div class="app-chrome">
+      <div class="app-chrome-wordmark"><span style="color:#fff">Rank</span><span style="color:var(--green-lt)">Actions</span></div>
+      <div class="app-chrome-tabs">
+        <div class="app-tab ${['dashboard'].includes(step.id) ? 'active' : ''}">Dashboard</div>
+        <div class="app-tab ${['site','audit'].includes(step.id) ? 'active' : ''}">Sites</div>
+        <div class="app-tab ${['strategy-suggestions','strategy-planner'].includes(step.id) ? 'active' : ''}">Strategy</div>
+        <div class="app-tab ${['content'].includes(step.id) ? 'active' : ''}">Content</div>
+        <div class="app-tab ${['links'].includes(step.id) ? 'active' : ''}">Links</div>
+        <div class="app-tab ${['rank'].includes(step.id) ? 'active' : ''}">Rank</div>
+        <div class="app-tab ${['settings'].includes(step.id) ? 'active' : ''}">Settings</div>
+      </div>
+      <div class="app-chrome-user">
+        <span style="color:var(--text-on-dark-mute);">morningrunco.com</span>
+        <div class="avatar">AD</div>
+      </div>
+    </div>
+  `;
+  const body = `<div class="app-body" id="app-body">${screens[step.screen] ? screens[step.screen]() : '<div class="welcome">Screen not built yet</div>'}</div>`;
+
+  // Highlights panel beneath the stage: lists every pin as a clickable chip.
+  // Hidden if the step has no callouts.
+  const highlights = step.callouts && step.callouts.length
+    ? `<div class="highlights has-content" id="highlights">
+         <div class="highlights-head"><span class="label">Highlights · hover a pin or click a chip</span></div>
+         <div class="highlights-list" id="highlights-list"></div>
+       </div>`
+    : `<div class="highlights" id="highlights"></div>`;
+
+  stage.innerHTML = chrome + body + highlights;
+
+  // Render pins inside the app body. The pin is a small circular numbered
+  // marker; full title/body lives in a tooltip that pops out on hover/click,
+  // and in the highlights panel below. This keeps the screens visible.
+  if (step.callouts) {
+    const bodyEl = document.getElementById('app-body');
+    const listEl = document.getElementById('highlights-list');
+
+    // Default arrow direction for the tooltip based on the pin's vertical
+    // position — if the pin is in the top half, tooltip drops below (arrow up);
+    // if in the bottom half, tooltip floats above (arrow down).
+    const inferArrow = (yStr) => {
+      const y = parseFloat(yStr);
+      return Number.isFinite(y) && y > 55 ? 'down' : 'up';
+    };
+
+    step.callouts.forEach((c, i) => {
+      const pinId = `pin-${currentStep}-${i}`;
+      const tipId = `tip-${currentStep}-${i}`;
+      const tipArrow = c.arrow && ['up','down','left','right'].includes(c.arrow) ? c.arrow : inferArrow(c.y);
+
+      // The pin itself
+      const pin = document.createElement('div');
+      pin.className = 'pin';
+      pin.id = pinId;
+      pin.style.left = c.x;
+      pin.style.top = c.y;
+      pin.style.animationDelay = (0.15 + i * 0.08) + 's';
+      pin.textContent = (i + 1);
+      pin.dataset.tip = tipId;
+      bodyEl.appendChild(pin);
+
+      // The tooltip — positioned relative to the pin via JS below for accuracy.
+      // Initially hidden; toggled on hover/click.
+      const tip = document.createElement('div');
+      tip.className = `pin-tip arrow-${tipArrow}`;
+      tip.id = tipId;
+      tip.innerHTML = `
+        <div class="pin-tip-title">${c.title}</div>
+        <div class="pin-tip-body">${c.body}</div>
+      `;
+      // Don't close the locked pin when clicking inside its own tooltip.
+      tip.addEventListener('click', (e) => e.stopPropagation());
+      bodyEl.appendChild(tip);
+
+      // Position the tooltip cleverly so it never extends past the visible
+      // app-body bounds. The pin position is fixed (user-authored); we just
+      // pick the best side for the tooltip given the available space.
+      //
+      // Strategy:
+      //   - Measure the tooltip after appending it (it's hidden but laid out)
+      //   - Compute pin's actual pixel position inside the body
+      //   - Try each of four sides (below, above, right, left) in order of
+      //     hint preference; pick the first one that fits
+      //   - Clamp the perpendicular axis (horizontal offset for above/below;
+      //     vertical for left/right) so the tooltip stays inside the body
+      const placeTip = () => {
+        const bodyRect = bodyEl.getBoundingClientRect();
+        const pinRect = pin.getBoundingClientRect();
+        // The tooltip is opacity:0 but laid out, so we can measure directly.
+        // Need to temporarily make it visible-for-layout to get accurate width
+        // because the CSS keeps it position:absolute with no explicit width.
+        const tipW = tip.offsetWidth;
+        const tipH = tip.offsetHeight;
+
+        // Pin centre relative to body
+        const pinCx = pinRect.left - bodyRect.left + pinRect.width / 2;
+        const pinCy = pinRect.top - bodyRect.top + pinRect.height / 2;
+        const bodyW = bodyEl.clientWidth;
+        const bodyH = bodyEl.clientHeight;
+        const offset = 18; // gap between pin and tip
+        const margin = 12; // min margin from body edge
+        const pinRadius = pinRect.width / 2;
+
+        // Space available on each side
+        const spaceBelow = bodyH - (pinCy + pinRadius);
+        const spaceAbove = pinCy - pinRadius;
+        const spaceRight = bodyW - (pinCx + pinRadius);
+        const spaceLeft = pinCx - pinRadius;
+
+        // Candidate placements with required space
+        const candidates = [
+          { side: 'down', fits: spaceBelow >= tipH + offset + margin },   // tip below pin (arrow up)
+          { side: 'up',   fits: spaceAbove >= tipH + offset + margin },   // tip above pin (arrow down)
+          { side: 'right', fits: spaceRight >= tipW + offset + margin },  // tip right of pin (arrow left)
+          { side: 'left',  fits: spaceLeft  >= tipW + offset + margin },  // tip left of pin (arrow right)
+        ];
+
+        // Honour author's hint first if it fits; otherwise first fitting; otherwise side with most space
+        const hint = c.arrow === 'up' ? 'down' : c.arrow === 'down' ? 'up' : c.arrow === 'left' ? 'right' : c.arrow === 'right' ? 'left' : null;
+        let chosen = candidates.find(k => k.side === hint && k.fits);
+        if (!chosen) chosen = candidates.find(k => k.fits);
+        if (!chosen) {
+          // Nothing fits cleanly — fall back to the side with the most space
+          const space = { down: spaceBelow, up: spaceAbove, right: spaceRight, left: spaceLeft };
+          chosen = { side: Object.entries(space).sort((a,b)=>b[1]-a[1])[0][0], fits: false };
+        }
+
+        // Apply arrow class — arrow points back TOWARDS the pin
+        const arrowMap = { down: 'up', up: 'down', right: 'left', left: 'right' };
+        tip.className = `pin-tip arrow-${arrowMap[chosen.side]}`;
+
+        // Reset all position properties
+        tip.style.left = '';
+        tip.style.right = '';
+        tip.style.top = '';
+        tip.style.bottom = '';
+
+        // Position the tip based on chosen side, then clamp perpendicular axis
+        if (chosen.side === 'down') {
+          const top = pinCy + pinRadius + offset;
+          let left = pinCx - 22; // tooltip's arrow sits ~22px from its left edge
+          left = Math.max(margin, Math.min(left, bodyW - tipW - margin));
+          tip.style.top = `${top}px`;
+          tip.style.left = `${left}px`;
+          // Adjust arrow offset within the tooltip so it points at the pin
+          adjustArrowOffset(tip, pinCx - left, 'horizontal');
+        } else if (chosen.side === 'up') {
+          const bottom = bodyH - (pinCy - pinRadius - offset);
+          let left = pinCx - 22;
+          left = Math.max(margin, Math.min(left, bodyW - tipW - margin));
+          tip.style.bottom = `${bottom}px`;
+          tip.style.left = `${left}px`;
+          adjustArrowOffset(tip, pinCx - left, 'horizontal');
+        } else if (chosen.side === 'right') {
+          const left = pinCx + pinRadius + offset;
+          let top = pinCy - 18; // arrow sits ~18px from tooltip's top
+          top = Math.max(margin, Math.min(top, bodyH - tipH - margin));
+          tip.style.left = `${left}px`;
+          tip.style.top = `${top}px`;
+          adjustArrowOffset(tip, pinCy - top, 'vertical');
+        } else { // left
+          const right = bodyW - (pinCx - pinRadius - offset);
+          let top = pinCy - 18;
+          top = Math.max(margin, Math.min(top, bodyH - tipH - margin));
+          tip.style.right = `${right}px`;
+          tip.style.top = `${top}px`;
+          adjustArrowOffset(tip, pinCy - top, 'vertical');
+        }
+      };
+
+      // Position once now, and reposition on resize/scroll
+      // (scrolling can change body dimensions)
+      requestAnimationFrame(placeTip);
+      window.addEventListener('resize', placeTip);
+
+      // Hover behaviour — show on hover, hide on leave (unless clicked-active).
+      const showTip = () => { tip.classList.add('show'); pin.classList.add('active'); };
+      const hideTip = () => { tip.classList.remove('show'); pin.classList.remove('active'); };
+      pin.addEventListener('mouseenter', showTip);
+      pin.addEventListener('mouseleave', () => { if (!pin.dataset.locked) hideTip(); });
+
+      // Click toggles a "locked open" state so users on touch devices (or
+      // anyone who wants to read at their own pace) can keep the tip open.
+      pin.addEventListener('click', (e) => {
+        e.stopPropagation();
+        // Close any other locked tips first
+        document.querySelectorAll('.pin').forEach(p => {
+          if (p !== pin) {
+            delete p.dataset.locked;
+            const otherTip = document.getElementById(p.dataset.tip);
+            if (otherTip) otherTip.classList.remove('show');
+            p.classList.remove('active');
+          }
+        });
+        if (pin.dataset.locked) {
+          delete pin.dataset.locked;
+          hideTip();
+        } else {
+          pin.dataset.locked = '1';
+          showTip();
+        }
+      });
+
+      // Corresponding chip in the highlights panel
+      if (listEl) {
+        const chip = document.createElement('div');
+        chip.className = 'highlight-chip';
+        chip.innerHTML = `
+          <div class="highlight-chip-num">${i + 1}</div>
+          <div class="highlight-chip-text">
+            <div class="highlight-chip-title">${c.title}</div>
+            <div class="highlight-chip-body">${c.body}</div>
+          </div>
+        `;
+        chip.addEventListener('mouseenter', () => {
+          chip.classList.add('active');
+          showTip();
+        });
+        chip.addEventListener('mouseleave', () => {
+          chip.classList.remove('active');
+          if (!pin.dataset.locked) hideTip();
+        });
+        chip.addEventListener('click', () => {
+          // Scroll the pin into view if needed, then lock the tip open
+          pin.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          // Close other locked pins
+          document.querySelectorAll('.pin').forEach(p => {
+            if (p !== pin) {
+              delete p.dataset.locked;
+              const otherTip = document.getElementById(p.dataset.tip);
+              if (otherTip) otherTip.classList.remove('show');
+              p.classList.remove('active');
+            }
+          });
+          pin.dataset.locked = '1';
+          showTip();
+        });
+        listEl.appendChild(chip);
+      }
+    });
+
+    // Click anywhere outside a pin/tip clears the locked state
+    document.getElementById('app-body').addEventListener('click', () => {
+      document.querySelectorAll('.pin').forEach(p => {
+        if (p.dataset.locked) {
+          delete p.dataset.locked;
+          const tip = document.getElementById(p.dataset.tip);
+          if (tip) tip.classList.remove('show');
+          p.classList.remove('active');
+        }
+      });
+    });
+  }
+}
+
+function renderWelcome(step) {
+  if (step.finish) {
+    return `
+      <div class="welcome-screen">
+        <div class="welcome-card">
+          <div class="welcome-hero"><span class="rank">Rank</span><span class="actions">Actions</span></div>
+          <div class="welcome-tagline">That's the whole product.</div>
+          <div class="welcome-sub">You've seen all 10 modules. Real Google data, AI-prioritised actions, audit-grade PDFs, agency white-label, GDPR self-service. Built for UK SMBs and the agencies that serve them.</div>
+          <div class="welcome-meta">
+            <div><span class="dot"></span>Launching soon</div>
+            <div><span class="dot"></span>Founder pricing available</div>
+            <div><span class="dot"></span>rankactions.com</div>
+          </div>
+          <button class="welcome-cta" onclick="goTo(0)">↻ Restart the tour</button>
+        </div>
+      </div>
+    `;
+  }
+  return `
+    <div class="welcome-screen">
+      <div class="welcome-card">
+        <div class="welcome-hero"><span class="rank">Rank</span><span class="actions">Actions</span></div>
+        <div class="welcome-tagline">SEO that tells you what to do next.</div>
+        <div class="welcome-sub">A 5-minute tour of every feature. 11 modules. Real screens, real flows, real data. Use ← and → keys to navigate, or click the modules on the left.</div>
+        <div class="welcome-meta">
+          <div><span class="dot"></span>UK SMBs</div>
+          <div><span class="dot"></span>Marketing teams</div>
+          <div><span class="dot"></span>Agencies</div>
+        </div>
+        <button class="welcome-cta" onclick="goTo(1)">Start the tour →</button>
+        <div class="welcome-kbd">Or press <span>→</span> to begin</div>
+      </div>
+    </div>
+  `;
+}
+
+function renderNav() {
+  const nav = document.getElementById('nav');
+  let html = '';
+  let lastSection = null;
+  steps.forEach((s, i) => {
+    if (s.section !== lastSection) {
+      html += `<div class="nav-section">${s.section}</div>`;
+      lastSection = s.section;
+    }
+    const isActive = i === currentStep;
+    const isDone = visited.has(i) && !isActive;
+    html += `
+      <div class="nav-item ${isActive ? 'active' : ''} ${isDone ? 'done' : ''}" onclick="goTo(${i})">
+        <div class="nav-num"><span>${String(i).padStart(2, '0')}</span></div>
+        <div class="nav-label">${s.navLabel}</div>
+        ${s.tier ? `<div class="nav-tier">${s.tier}</div>` : ''}
+      </div>
+    `;
+  });
+  nav.innerHTML = html;
+}
+
+function goTo(i) {
+  if (i < 0 || i >= steps.length) return;
+  currentStep = i;
+  visited.add(i);
+  render();
+}
+
+document.getElementById('prev').onclick = () => goTo(currentStep - 1);
+document.getElementById('next').onclick = () => goTo(currentStep + 1);
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight') goTo(currentStep + 1);
+  if (e.key === 'ArrowLeft') goTo(currentStep - 1);
+});
+
+// Initial render
+render();
+</script>
+
+</body>
+</html>

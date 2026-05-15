@@ -1,0 +1,11 @@
+# Cloudflare Pages _headers file.
+# Place this at the ROOT of your Cloudflare Pages deploy (public/_headers),
+# or merge these rules into your existing _headers file.
+#
+# X-Robots-Tag is read by crawlers BEFORE they parse HTML, and also covers
+# asset files (images, JSON) that don't have a <head> for meta tags.
+
+/walkthrough/*
+  X-Robots-Tag: noindex, nofollow, noarchive, nosnippet, noimageindex
+  Referrer-Policy: no-referrer
+  Cache-Control: private, no-cache, no-store, must-revalidate
