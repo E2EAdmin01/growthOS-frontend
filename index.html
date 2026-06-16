@@ -52,32 +52,27 @@
     },
     {
       "@type": "Offer",
-      "name": "Starter",
-      "price": "19",
+      "name": "Individual",
+      "price": "100",
       "priceCurrency": "GBP",
       "billingIncrement": "P1M"
     },
     {
       "@type": "Offer",
-      "name": "Pro",
-      "price": "39",
-      "priceCurrency": "GBP",
-      "billingIncrement": "P1M"
+      "name": "Business",
+      "priceSpecification": {
+        "@type": "PriceSpecification",
+        "priceCurrency": "GBP",
+        "description": "Tailored pricing — contact us for a quote"
+      }
     },
     {
       "@type": "Offer",
       "name": "Agency",
-      "price": "149",
-      "priceCurrency": "GBP",
-      "billingIncrement": "P1M"
-    },
-    {
-      "@type": "Offer",
-      "name": "Enterprise",
       "priceSpecification": {
         "@type": "PriceSpecification",
         "priceCurrency": "GBP",
-        "description": "Custom pricing — contact us for a quote"
+        "description": "Tailored pricing — contact us for a quote"
       }
     }
   ],
@@ -132,7 +127,7 @@
       "name": "Can I use RankActions for client websites?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes — Pro includes 5 websites and Agency includes 10, with extra sites at £5/month each. Each site gets its own action list, content strategy, link building pipeline and reports — all managed from one dashboard."
+        "text": "Individual and Business each cover one website. The Agency plan supports multiple websites, each with its own action list, content strategy, link building pipeline and reports — all managed from one dashboard. Contact us to tailor an Agency plan to the number of sites you manage."
       }
     }
   ]
@@ -1365,7 +1360,7 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);display:flex;align
           </tr>
         </thead>
         <tbody>
-          <tr><td style="text-align:left;padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--ink2);font-weight:600;">Starting price</td><td style="padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--green);font-weight:700;">£19/mo</td><td style="padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--ink3);">~£115/mo</td><td style="padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--ink3);">~£100/mo</td><td style="padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--ink3);">~£40/mo</td></tr>
+          <tr><td style="text-align:left;padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--ink2);font-weight:600;">Starting price</td><td style="padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--green);font-weight:700;">£100/mo</td><td style="padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--ink3);">~£115/mo</td><td style="padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--ink3);">~£100/mo</td><td style="padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--ink3);">~£40/mo</td></tr>
           <tr><td style="text-align:left;padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--ink2);font-weight:600;">Tells you what to fix</td><td style="padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--green);font-weight:700;">✓ Weekly actions</td><td style="padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--ink3);">✗</td><td style="padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--ink3);">✗</td><td style="padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--ink3);">✗</td></tr>
           <tr><td style="text-align:left;padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--ink2);font-weight:600;">Writes the fix for you</td><td style="padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--green);font-weight:700;">✓ AI-generated</td><td style="padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--ink3);">✗</td><td style="padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--ink3);">✗</td><td style="padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--ink3);">✗</td></tr>
           <tr><td style="text-align:left;padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--ink2);font-weight:600;">Generates blog posts</td><td style="padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--green);font-weight:700;">✓ SEO-optimised</td><td style="padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--ink3);">Add-on</td><td style="padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--ink3);">✗</td><td style="padding:.65rem .5rem;border-bottom:1px solid var(--border);color:var(--ink3);">✗</td></tr>
@@ -1423,84 +1418,80 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);display:flex;align
       </div>
       <a href="https://app.rankactions.com" class="price-btn outline">Get started free</a>
     </div>
-    <div class="price-card">
-      <div class="price-name">Starter</div>
-      <div class="price-amount" id="starter-price">£19</div>
-      <div class="price-period" id="starter-period">per month · cancel any time</div>
-      <div id="starter-annual-saving" style="display:none;font-size:.8rem;color:var(--green);font-weight:600;margin-bottom:.5rem;">Save £38 vs monthly billing</div>
-      <ul class="price-features">
-        <li>3 websites</li>
-        <li>20 AI fixes per month</li>
-        <li>Rank Tracker</li>
-      </ul>
-      <div class="price-more" onclick="this.classList.toggle('open')">
-        <span class="price-more-label">See all features</span>
-        <ul class="price-features-extra">
-          <li>Full action list</li>
-          <li>Unlimited page audits + AI Readiness</li>
-          <li>Weekly email digest</li>
-        </ul>
-      </div>
-      <a href="https://app.rankactions.com" class="price-btn outline" id="starter-cta">Get started</a>
-    </div>
     <div class="price-card featured">
       <div class="price-badge">Most popular</div>
-      <div class="price-name">Pro</div>
-      <div class="price-amount" id="pro-price">£39</div>
-      <div class="price-period" id="pro-period">per month · cancel any time</div>
-      <div id="pro-annual-saving" style="display:none;font-size:.8rem;color:var(--green);font-weight:600;margin-bottom:.5rem;">Save £78 vs monthly billing</div>
+      <div class="price-name">Individual</div>
+      <div class="price-amount" id="individual-price">£100</div>
+      <div class="price-period" id="individual-period">per month · cancel any time</div>
+      <div id="individual-annual-saving" style="display:none;font-size:.8rem;color:var(--green);font-weight:600;margin-bottom:.5rem;"></div>
       <ul class="price-features">
-        <li>5 websites (+£5/site extra)</li>
-        <li>Unlimited AI fixes</li>
-        <li>AI Content Generator</li>
-        <li>Real keyword data <span style="font-size:.7rem;color:var(--ink3);">(10 sessions/mo)</span></li>
+        <li>1 website</li>
+        <li>20 AI fixes per month</li>
+        <li>Rank Tracker</li>
+        <li>Full action list</li>
       </ul>
       <div class="price-more" onclick="this.classList.toggle('open')">
         <span class="price-more-label">See all features</span>
         <ul class="price-features-extra">
-          <li>Starting Out wizard for new sites</li>
-          <li>Competitor keyword discovery</li>
-          <li>Strategy Planner</li>
-          <li>Link Building tools</li>
-          <li>Rank Tracker</li>
-          <li>Page Audit + AI Readiness</li>
+          <li>Unlimited page audits + AI Readiness</li>
+          <li>Search Console data</li>
           <li>Weekly email digest</li>
         </ul>
       </div>
-      <a href="https://app.rankactions.com" class="price-btn solid" id="pro-cta">Start free trial</a>
+      <a href="https://app.rankactions.com" class="price-btn solid" id="individual-cta">Get started</a>
+    </div>
+    <div class="price-card">
+      <div class="price-name">Business</div>
+      <div class="price-amount" style="font-size:1.6rem;">Let’s talk</div>
+      <div class="price-period">tailored pricing</div>
+      <ul class="price-features">
+        <li>1 website</li>
+        <li>Unlimited AI fixes</li>
+        <li>AI Content Generator</li>
+        <li>Strategy Planner</li>
+      </ul>
+      <div class="price-more" onclick="this.classList.toggle('open')">
+        <span class="price-more-label">See all features</span>
+        <ul class="price-features-extra">
+          <li>Link Building tools</li>
+          <li>Competitor keyword discovery</li>
+          <li>Rank Tracker + Page Audit</li>
+          <li>Priority support</li>
+        </ul>
+      </div>
+      <a href="#" onclick="openEnterpriseContact();return false;" class="price-btn outline">Contact us</a>
     </div>
     <div class="price-card">
       <div class="price-name">Agency</div>
-      <div class="price-amount" id="agency-price">£149</div>
-      <div class="price-period" id="agency-period">per month · cancel any time</div>
-      <div id="agency-annual-saving" style="display:none;font-size:.8rem;color:var(--green);font-weight:600;margin-bottom:.5rem;">Save £298 vs monthly billing</div>
+      <div class="price-amount" style="font-size:1.6rem;">Let’s talk</div>
+      <div class="price-period">tailored pricing</div>
       <ul class="price-features">
-        <li>Everything in Pro</li>
-        <li>10 websites (+£5/site extra)</li>
-        <li>Real keyword data <span style="font-size:.7rem;color:var(--ink3);">(50 sessions/mo)</span></li>
+        <li>Everything in Business</li>
+        <li>Multiple websites</li>
+        <li>Dedicated account manager</li>
         <li>Priority support</li>
       </ul>
       <div class="price-more" onclick="this.classList.toggle('open')">
         <span class="price-more-label">See all features</span>
         <ul class="price-features-extra">
+          <li>White-label reports <span style="font-size:.7rem;color:var(--ink3);">(coming soon)</span></li>
           <li>Higher DataForSEO quota</li>
           <li>Bulk competitor analysis</li>
-          <li>White-label reports <span style="font-size:.7rem;color:var(--ink3);">(coming soon)</span></li>
         </ul>
       </div>
-      <a href="https://app.rankactions.com" class="price-btn outline" id="agency-cta">Get started</a>
+      <a href="#" onclick="openEnterpriseContact();return false;" class="price-btn outline">Contact us</a>
     </div>
   </div>
 
-  <!-- Enterprise callout — sits below the 4-card grid, bespoke pricing, contact form not Stripe -->
+  <!-- Business & Agency callout — contact-form tiers (bespoke pricing, not Stripe). id="enterprise" kept as the deep-link anchor used by the app's "Contact us" buttons. -->
   <div id="enterprise" class="reveal" style="margin-top:1.75rem;padding:1.75rem 2rem;background:linear-gradient(135deg,#0d0d0d 0%,#1a1a1a 100%);border-radius:14px;display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap;border:1px solid #2a2a2a;scroll-margin-top:80px;">
     <div style="flex:1;min-width:280px;">
       <div style="display:flex;align-items:center;gap:.65rem;margin-bottom:.6rem;flex-wrap:wrap;">
-        <span style="background:rgba(30,168,99,.18);color:#1ea863;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:.3rem .65rem;border-radius:999px;">Enterprise</span>
-        <h3 style="margin:0;color:#fff;font-size:1.2rem;font-weight:700;font-family:var(--display);">Need more than Agency?</h3>
+        <span style="background:rgba(30,168,99,.18);color:#1ea863;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:.3rem .65rem;border-radius:999px;">Business &amp; Agency</span>
+        <h3 style="margin:0;color:#fff;font-size:1.2rem;font-weight:700;font-family:var(--display);">Need a tailored plan?</h3>
       </div>
       <p style="margin:0;color:rgba(255,255,255,.72);font-size:.92rem;line-height:1.55;max-width:640px;">
-        White-label reports with your branding, custom domain, dedicated account manager, unlimited keyword tracking, and a custom SLA. Built for agencies managing 20+ clients or businesses with bespoke needs.
+        Business gives you the full toolkit for one website; Agency adds multiple sites, white-label reports and a dedicated account manager. Tell us what you need and we'll tailor a plan to fit.
       </p>
     </div>
     <button type="button" onclick="openEnterpriseContact()" style="background:#fff;color:#0d0d0d;border:none;border-radius:999px;padding:.85rem 1.75rem;font-family:var(--body);font-size:.95rem;font-weight:600;cursor:pointer;flex-shrink:0;transition:transform .15s ease;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
@@ -1509,7 +1500,7 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);display:flex;align
   </div>
 
   <div style="text-align:center;margin-top:1.5rem;font-size:.85rem;color:var(--ink3);">
-    All prices exclude VAT where applicable · Secure payments via Stripe · Enterprise pricing on request
+    All prices exclude VAT where applicable · Secure payments via Stripe · Business &amp; Agency pricing on request
   </div>
 </section>
 
@@ -1581,35 +1572,14 @@ function setBilling(mode) {
   btnA.style.background = isAnnual ? 'var(--ink)'   : 'none';
   btnA.style.color      = isAnnual ? 'white'        : 'var(--ink3)';
 
-  // Starter card
-  document.getElementById('starter-price').innerHTML = isAnnual
-    ? '<span style="font-size:1.1rem;color:var(--ink3);text-decoration:line-through;margin-right:.25rem;">£228</span>£190'
-    : '£19';
-  document.getElementById('starter-period').innerHTML = isAnnual
-    ? 'per year &mdash; just <strong>£15.83/mo</strong>'
+  // Individual card (the only Stripe tier with a billing toggle)
+  document.getElementById('individual-price').innerHTML = isAnnual ? '£1,200' : '£100';
+  document.getElementById('individual-period').innerHTML = isAnnual
+    ? 'per year &mdash; <strong>£100/mo</strong>'
     : 'per month &middot; cancel any time';
-  document.getElementById('starter-annual-saving').style.display = isAnnual ? 'block' : 'none';
-  document.getElementById('starter-cta').textContent = isAnnual ? 'Get started — best value' : 'Get started';
-
-  // Pro card
-  document.getElementById('pro-price').innerHTML = isAnnual
-    ? '<span style="font-size:1.1rem;color:var(--ink3);text-decoration:line-through;margin-right:.25rem;">£468</span>£390'
-    : '£39';
-  document.getElementById('pro-period').innerHTML = isAnnual
-    ? 'per year &mdash; just <strong>£32.50/mo</strong>'
-    : 'per month &middot; cancel any time';
-  document.getElementById('pro-annual-saving').style.display = isAnnual ? 'block' : 'none';
-  document.getElementById('pro-cta').textContent = isAnnual ? 'Get started — best value' : 'Start free trial';
-
-  // Agency card
-  document.getElementById('agency-price').innerHTML = isAnnual
-    ? '<span style="font-size:1.1rem;color:var(--ink3);text-decoration:line-through;margin-right:.25rem;">£1,788</span>£1,490'
-    : '£149';
-  document.getElementById('agency-period').innerHTML = isAnnual
-    ? 'per year &mdash; just <strong>£124.17/mo</strong>'
-    : 'per month &middot; cancel any time';
-  document.getElementById('agency-annual-saving').style.display = isAnnual ? 'block' : 'none';
-  document.getElementById('agency-cta').textContent = isAnnual ? 'Get started — best value' : 'Get started';
+  document.getElementById('individual-annual-saving').style.display = 'none';
+  document.getElementById('individual-cta').textContent = 'Get started';
+  // Business & Agency are contact-form tiers — no price to toggle.
 }
 
 // ── Enterprise contact form ─────────────────────────────────
@@ -1726,7 +1696,7 @@ window.addEventListener('hashchange', checkEnterpriseHash);
   </div>
   <div class="faq-item reveal">
     <div class="faq-q">Can I use it for client websites?</div>
-    <div class="faq-a">Yes — Pro includes 5 websites and Agency includes 10, with extra sites at £5/month each. Each site gets its own action list, content strategy, link building pipeline and reports — all managed from one dashboard.</div>
+    <div class="faq-a">Individual and Business each cover one website. The Agency plan supports multiple websites, each with its own action list, content strategy, link building pipeline and reports — all managed from one dashboard. Contact us to tailor an Agency plan to the number of sites you manage.</div>
   </div>
   <div class="faq-item reveal">
     <div class="faq-q">What is the content strategy planner?</div>
