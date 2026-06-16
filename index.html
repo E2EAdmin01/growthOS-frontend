@@ -1458,7 +1458,7 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);display:flex;align
           <li>Priority support</li>
         </ul>
       </div>
-      <a href="#" onclick="openEnterpriseContact();return false;" class="price-btn outline">Contact us</a>
+      <a href="#" onclick="openEnterpriseContact('business');return false;" class="price-btn outline">Contact us</a>
     </div>
     <div class="price-card">
       <div class="price-name">Agency</div>
@@ -1478,7 +1478,7 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);display:flex;align
           <li>Bulk competitor analysis</li>
         </ul>
       </div>
-      <a href="#" onclick="openEnterpriseContact();return false;" class="price-btn outline">Contact us</a>
+      <a href="#" onclick="openEnterpriseContact('agency');return false;" class="price-btn outline">Contact us</a>
     </div>
   </div>
 
@@ -1493,7 +1493,7 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);display:flex;align
         Business gives you the full toolkit for one website; Agency adds multiple sites, white-label reports and a dedicated account manager. Tell us what you need and we'll tailor a plan to fit.
       </p>
     </div>
-    <button type="button" onclick="openEnterpriseContact()" style="background:#fff;color:#0d0d0d;border:none;border-radius:999px;padding:.85rem 1.75rem;font-family:var(--body);font-size:.95rem;font-weight:600;cursor:pointer;flex-shrink:0;transition:transform .15s ease;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
+    <button type="button" onclick="openEnterpriseContact('')" style="background:#fff;color:#0d0d0d;border:none;border-radius:999px;padding:.85rem 1.75rem;font-family:var(--body);font-size:.95rem;font-weight:600;cursor:pointer;flex-shrink:0;transition:transform .15s ease;" onmouseover="this.style.transform='translateY(-1px)'" onmouseout="this.style.transform='translateY(0)'">
       Contact us →
     </button>
   </div>
@@ -1583,7 +1583,9 @@ function setBilling(mode) {
 
 // ── Enterprise contact form ─────────────────────────────────
 // Opens the modal, focuses the first field, resets prior state.
-function openEnterpriseContact() {
+var _enquiryPackage = '';
+function openEnterpriseContact(pkg) {
+  _enquiryPackage = (pkg === 'business' || pkg === 'agency') ? pkg : '';
   var modal = document.getElementById('enterprise-modal');
   var form = document.getElementById('enterprise-form');
   if (!modal || !form) return;
@@ -1619,6 +1621,8 @@ async function submitEnterpriseContact(e) {
     company: document.getElementById('ec-company').value.trim(),
     phone:   document.getElementById('ec-phone').value.trim(),
     message: document.getElementById('ec-message').value.trim(),
+    // Which package the enquiry came from (set when the modal was opened)
+    package: _enquiryPackage,
     // Honeypot field — bots fill it, humans don't see it
     hp_extra_info: e.target.elements['hp_extra_info'] ? e.target.elements['hp_extra_info'].value : '',
   };
@@ -1665,9 +1669,13 @@ document.addEventListener('click', function(e) {
 // Auto-open the Enterprise modal if the URL hash is #enterprise.
 // Used by the in-app "Contact us about Enterprise" link from the upgrade modal.
 function checkEnterpriseHash() {
-  if (window.location.hash === '#enterprise') {
+  var hash = window.location.hash;
+  if (hash === '#enterprise' || hash === '#enterprise-business' || hash === '#enterprise-agency') {
+    var pkg = hash === '#enterprise-business' ? 'business'
+            : hash === '#enterprise-agency'   ? 'agency'
+            : '';
     // Slight delay so other DOM init has a chance to settle
-    setTimeout(openEnterpriseContact, 100);
+    setTimeout(function(){ openEnterpriseContact(pkg); }, 100);
   }
 }
 window.addEventListener('DOMContentLoaded', checkEnterpriseHash);
